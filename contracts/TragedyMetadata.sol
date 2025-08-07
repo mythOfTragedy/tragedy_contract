@@ -559,14 +559,37 @@ contract TragedyMetadata {
     }
     
     function getBaseRarityLevel(uint256 tokenId) internal pure returns (uint8) {
-        // Use tokenId directly for deterministic rarity distribution
-        uint256 roll = (tokenId * 13) % 100;
+        // Check for 3-digit patterns first (Rare)
+        uint256 last3 = tokenId % 1000;
+        uint256 d1 = last3 / 100;
+        uint256 d2 = (last3 / 10) % 10;
+        uint256 d3 = last3 % 10;
         
-        if (roll < 40) return 0; // Common 40%
-        if (roll < 70) return 1; // Uncommon 30%
-        if (roll < 85) return 2; // Rare 15%
-        if (roll < 95) return 3; // Epic 10%
-        return 4; // Legendary 5%
+        // Triple digits (111, 222, 333, etc.)
+        if (d1 == d2 && d2 == d3 && tokenId >= 100) {
+            return 2; // Rare
+        }
+        
+        // Sequential ascending (123, 234, 345, etc.)
+        if (d1 + 1 == d2 && d2 + 1 == d3 && tokenId >= 100) {
+            return 2; // Rare
+        }
+        
+        // Sequential descending (321, 432, 543, etc.)
+        if (d1 == d2 + 1 && d2 == d3 + 1 && tokenId >= 100) {
+            return 2; // Rare
+        }
+        
+        // Check for 2-digit doubles (Uncommon)
+        uint256 last2 = tokenId % 100;
+        if (last2 == 11 || last2 == 22 || last2 == 33 || last2 == 44 || 
+            last2 == 55 || last2 == 66 || last2 == 77 || last2 == 88 || 
+            last2 == 99 || last2 == 0) { // 00 counts as double
+            return 1; // Uncommon
+        }
+        
+        // Everything else is Common
+        return 0; // Common
     }
     
     function getRarityName(uint8 level) internal pure returns (string memory) {

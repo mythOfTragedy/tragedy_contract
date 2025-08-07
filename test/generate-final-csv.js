@@ -307,18 +307,37 @@ async function main() {
             return "Epic";
         }
         
-        // Base rarity calculation
-        const roll = (tokenId * 13) % 100;
+        // Check for 3-digit patterns first (Rare)
+        const last3 = tokenId % 1000;
+        const d1 = Math.floor(last3 / 100);
+        const d2 = Math.floor((last3 / 10) % 10);
+        const d3 = last3 % 10;
         
-        let baseLevel = 0;
-        if (roll < 40) baseLevel = 0; // Common 40%
-        else if (roll < 70) baseLevel = 1; // Uncommon 30%
-        else if (roll < 85) baseLevel = 2; // Rare 15%
-        else if (roll < 95) baseLevel = 3; // Epic 10%
-        else baseLevel = 4; // Legendary 5%
+        // Triple digits (111, 222, 333, etc.)
+        if (d1 === d2 && d2 === d3 && tokenId >= 100) {
+            return "Rare";
+        }
         
-        const rarityNames = ["Common", "Uncommon", "Rare", "Epic", "Legendary"];
-        return rarityNames[baseLevel];
+        // Sequential ascending (123, 234, 345, etc.)
+        if (d1 + 1 === d2 && d2 + 1 === d3 && tokenId >= 100) {
+            return "Rare";
+        }
+        
+        // Sequential descending (321, 432, 543, etc.)
+        if (d1 === d2 + 1 && d2 === d3 + 1 && tokenId >= 100) {
+            return "Rare";
+        }
+        
+        // Check for 2-digit doubles (Uncommon)
+        const last2 = tokenId % 100;
+        if (last2 === 11 || last2 === 22 || last2 === 33 || last2 === 44 || 
+            last2 === 55 || last2 === 66 || last2 === 77 || last2 === 88 || 
+            last2 === 99 || last2 === 0) { // 00 counts as double
+            return "Uncommon";
+        }
+        
+        // Everything else is Common
+        return "Common";
     }
 
     // CSV header
