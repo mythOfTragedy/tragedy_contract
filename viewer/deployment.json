@@ -1,0 +1,18 @@
+{
+  "network": "bonsoleil",
+  "timestamp": "2025-08-06T23:10:25.458Z",
+  "note": "Production deployment with final gateway URLs",
+  "contracts": {
+    "bankedNFT": "0xdEa70EcCd1eb4CbCD8ff55Ca6233bf90C7c1f171",
+    "metadata": "0x446697246d89Ac256a48359a5b6DeAEb29D192Db",
+    "composer": "0xC0a517f366aFb56640eD2eD92C8957a8C9007adD",
+    "monsterBank": "0x707610EC610Af7cB3CA6edF7a8CE736Ce46C06FB",
+    "itemBank": "0xcFc372b96562D3658aCEE081c9977Fad33D82e92",
+    "backgroundBank": "0x33F0466024c54327d1EFb7Bb732e52932bE5FaB7",
+    "effectBank": "0xc01ECc429fa7FCce0A9633Fbb81A3c43eac89E6c",
+    "monsterBank1": "0xd5C5b97D42BF9fb6be2d496477f07344475E9e83",
+    "monsterBank2": "0xd45e1F6b617aebA14d5fcEe8A0eA4a374F2C3265",
+    "itemBank1": "0xCe466A729eac823851BDaE72323BC0c749D2A27C",
+    "itemBank2": "0xdFB0Bf12feb68EE329532D38c20A8D44406B7258"
+  }
+}

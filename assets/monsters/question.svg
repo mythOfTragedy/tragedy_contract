@@ -1,0 +1,73 @@
+<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <!-- ドラゴンのシルエット (半透明) -->
+  <g opacity="0.2">
+    <!-- 角 -->
+    <rect x="6" y="1" width="2" height="3" fill="#666"/>
+    <rect x="16" y="1" width="2" height="3" fill="#666"/>
+    <rect x="7" y="2" width="1" height="2" fill="#666"/>
+    <rect x="16" y="2" width="1" height="2" fill="#666"/>
+    <!-- 背びれ -->
+    <rect x="11" y="2" width="2" height="2" fill="#666"/>
+    <rect x="10" y="3" width="4" height="1" fill="#666"/>
+    <!-- 頭部 -->
+    <rect x="7" y="4" width="10" height="2" fill="#666"/>
+    <rect x="5" y="6" width="14" height="4" fill="#666"/>
+    <!-- 鼻と煙 -->
+    <rect x="4" y="8" width="4" height="2" fill="#666"/>
+    <rect x="5" y="9" width="2" height="1" fill="#666"/>
+    <rect x="2" y="7" width="2" height="1" fill="#666"/>
+    <rect x="1" y="6" width="2" height="1" fill="#666"/>
+    <rect x="2" y="8" width="1" height="1" fill="#666"/>
+    <!-- 首 -->
+    <rect x="8" y="10" width="8" height="2" fill="#666"/>
+    <!-- 体 -->
+    <rect x="6" y="12" width="12" height="4" fill="#666"/>
+    <rect x="7" y="16" width="10" height="3" fill="#666"/>
+    <!-- 翼 -->
+    <rect x="2" y="11" width="4" height="2" fill="#666"/>
+    <rect x="18" y="11" width="4" height="2" fill="#666"/>
+    <rect x="1" y="12" width="3" height="4" fill="#666"/>
+    <rect x="20" y="12" width="3" height="4" fill="#666"/>
+    <rect x="0" y="13" width="2" height="2" fill="#666"/>
+    <rect x="22" y="13" width="2" height="2" fill="#666"/>
+    <!-- 背骨のスパイク -->
+    <rect x="9" y="11" width="1" height="2" fill="#666"/>
+    <rect x="12" y="11" width="1" height="2" fill="#666"/>
+    <rect x="15" y="11" width="1" height="2" fill="#666"/>
+    <!-- 脚と爪 -->
+    <rect x="7" y="19" width="3" height="2" fill="#666"/>
+    <rect x="14" y="19" width="3" height="2" fill="#666"/>
+    <rect x="6" y="21" width="1" height="2" fill="#666"/>
+    <rect x="7" y="21" width="1" height="2" fill="#666"/>
+    <rect x="8" y="21" width="1" height="2" fill="#666"/>
+    <rect x="9" y="21" width="1" height="2" fill="#666"/>
+    <rect x="14" y="21" width="1" height="2" fill="#666"/>
+    <rect x="15" y="21" width="1" height="2" fill="#666"/>
+    <rect x="16" y="21" width="1" height="2" fill="#666"/>
+    <rect x="17" y="21" width="1" height="2" fill="#666"/>
+    <!-- 尻尾 -->
+    <rect x="17" y="17" width="3" height="2" fill="#666"/>
+    <rect x="19" y="18" width="2" height="2" fill="#666"/>
+    <rect x="20" y="19" width="2" height="1" fill="#666"/>
+    <rect x="21" y="19" width="1" height="1" fill="#666"/>
+  </g>
+  
+  <!-- ドット絵風のはてなマーク -->
+  <!-- メイン部分 -->
+  <rect x="10" y="4" width="4" height="2" fill="#9b4dff"/>
+  <rect x="8" y="6" width="2" height="2" fill="#9b4dff"/>
+  <rect x="14" y="6" width="2" height="2" fill="#9b4dff"/>
+  <rect x="14" y="8" width="2" height="2" fill="#9b4dff"/>
+  <rect x="12" y="10" width="2" height="2" fill="#9b4dff"/>
+  <rect x="11" y="12" width="2" height="2" fill="#9b4dff"/>
+  <rect x="11" y="14" width="2" height="2" fill="#9b4dff"/>
+  
+  <!-- ドット -->
+  <rect x="11" y="18" width="2" height="2" fill="#9b4dff"/>
+  
+  <!-- ハイライト効果 -->
+  <rect x="11" y="5" width="2" height="1" fill="#b792ff"/>
+  <rect x="9" y="7" width="1" height="1" fill="#b792ff"/>
+  <rect x="12" y="13" width="1" height="1" fill="#b792ff"/>
+  <rect x="12" y="19" width="1" height="1" fill="#b792ff"/>
+</svg>

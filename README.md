@@ -1,366 +1,178 @@
-# The Mythical Cursed-Nightmare: Smart Contracts
+# Tragedy NFT Arweave Hybrid Implementation - 正式構築手順書
 
-> "Adding cursed developers to a late nightmare project makes it later."  
-> — Inspired by Frederick P. Brooks Jr.
+## 概要
+本手順書は、Arweaveとオンチェーンのハイブリッドアプローチを用いたTragedy NFTシステムの正式な構築手順を記載します。
 
-A revolutionary 4-layer smart contract architecture for fully on-chain generative NFTs. This system implements an advanced modular design that achieves up to 80% gas optimization while maintaining complete decentralization.
+### アプローチの特徴
+1. **背景とエフェクト**: Arweaveに永続保存（大容量画像対応）
+2. **モンスターとアイテム**: オンチェーンSVG（完全なオンチェーン）
+3. **カラーフィルター**: 背景テーマに応じた色相変換フィルターをSVG内で実装
+4. **Base64エンコーディング**: オンチェーンSVGをdata URIとして埋め込み
 
-## 🏗️ Architecture Overview
+## 前提条件
+- Node.js 16以上
+- Hardhat開発環境
+- Bon-Soleil Testnetへのアクセス
 
-### 4-Layer System Design
-
-Our smart contract architecture consists of four interconnected layers:
-
+## プロジェクト構造
 ```
-Layer 4: Material Bank    [SVG Components Storage]
-    ↓
-Layer 3: SVG Composer     [Dynamic SVG Assembly] 
-    ↓
-Layer 2: Metadata Bank    [Metadata Generation & Caching]
-    ↓
-Layer 1: BankedNFT        [ERC-721 + External Metadata]
+formal_procedure_p1/
+├── README.md                 # 本手順書
+├── contracts/
+│   ├── libraries/
+│   │   └── Base64.sol       # Base64エンコーディングライブラリ
+│   ├── ArweaveMonsterBank.sol    # モンスターSVG保存用
+│   ├── ArweaveItemBank.sol       # アイテムSVG保存用
+│   ├── ArweaveBackgroundBank.sol # 背景Arweave URL管理用
+│   ├── ArweaveEffectBank.sol     # エフェクトArweave URL管理用
+│   └── ArweaveTragedyComposerV2.sol # SVG合成エンジン
+├── scripts/
+│   ├── 01-deploy-all.js          # 全コントラクト一括デプロイ
+│   ├── 02-update-urls.js         # Arweave URL更新
+│   └── 03-test-composition.js    # 動作確認
+├── test/
+│   └── ArweaveComposer.test.js   # ユニットテスト
+└── viewer/
+    └── index.html                # ブラウザ確認用
 ```
 
-### Core Benefits
-- **🔥 80% Gas Reduction** compared to traditional monolithic NFT contracts
-- **♻️ Component Reusability** across multiple NFT collections  
-- **🔧 Modular Upgrades** without affecting the main NFT contract
-- **⛓️ Fully On-Chain** metadata and SVG generation
-- **📈 Scalable Architecture** for future collections
+## Step 1: プロジェクトセットアップ
 
-## 🎛️ Contract Components
+### 1.1 Hardhatプロジェクトの初期化
+```bash
+cd formal_procedure_p1
+npm init -y
+npm install --save-dev hardhat @nomiclabs/hardhat-waffle @nomiclabs/hardhat-ethers ethers chai
+npx hardhat init
+```
 
-### Layer 1: BankedNFT Contract
-**File**: `contracts/BankedNFT.sol`
+### 1.2 hardhat.config.jsの設定
+```javascript
+require("@nomiclabs/hardhat-waffle");
+require("@nomiclabs/hardhat-ethers");
+require('dotenv').config();
 
-The main ERC-721 NFT contract that delegates metadata generation to external banks.
+module.exports = {
+  solidity: {
+    version: "0.8.20",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 100
+      },
+      viaIR: true
+    }
+  },
+  networks: {
+    bonsoleil: {
+      url: "https://dev2.bon-soleil.com/rpc",
+      chainId: 21201,
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : []
+    }
+  }
+};
+```
 
-**Key Features**:
-- Standard ERC-721 implementation
-- External metadata delegation via `tokenURI()`
-- Minting logic with deterministic generation
-- Owner controls and access management
+### 1.3 環境変数の設定
+`.env`ファイルを作成：
+```
+PRIVATE_KEY=your_private_key_here
+```
 
-**Gas Optimization**:
-- Minimal storage in main contract
-- Delegated metadata computation
-- Efficient token ID to traits mapping
+## Step 2: コントラクトの実装
 
-### Layer 2: MetadataBank Contract  
-**File**: `contracts/MonsterMetadataBank.sol`
+### 2.1 Base64ライブラリ
+`contracts/libraries/Base64.sol`を作成（後述のファイル参照）
 
-Generates and caches metadata for NFTs with sophisticated rarity and synergy systems.
+### 2.2 Bank系コントラクト
+以下のコントラクトを作成：
+- `ArweaveMonsterBank.sol`: モンスターSVGをオンチェーンで保存
+- `ArweaveItemBank.sol`: アイテムSVGをオンチェーンで保存
+- `ArweaveBackgroundBank.sol`: 背景のArweave URLを管理
+- `ArweaveEffectBank.sol`: エフェクトのArweave URLを管理
 
-**Key Features**:
-- **Deterministic Generation**: Token ID → 4 traits algorithm
-- **Rarity System**: Common (40%) to Legendary (5%)
-- **Synergy Detection**: Multi-element combinations
-- **Special IDs**: 30 legendary tokens with unique stories
-- **JSON Metadata**: OpenSea-compatible format
+### 2.3 Composerコントラクト
+`ArweaveTragedyComposerV2.sol`を作成
+- 各Bankからデータを取得
+- SVGフィルターを生成
+- 最終的なSVGを合成
 
-**Algorithms**:
-- Species selection (10 types)
-- Equipment assignment (10 types)  
-- Realm determination (10 types)
-- Curse application (10 types)
-- Rarity calculation with bonuses
+## Step 3: デプロイ
 
-### Layer 3: SVGComposer Contract
-**File**: `contracts/SVGComposer.sol`
+### 3.1 コンパイル
+```bash
+npx hardhat compile
+```
 
-Dynamically assembles SVG images from component libraries stored in MaterialBank.
+### 3.2 デプロイスクリプトの実行
+```bash
+npx hardhat run scripts/01-deploy-all.js --network bonsoleil
+```
 
-**Key Features**:
-- **Real-time SVG Assembly**: Combines multiple SVG components
-- **Layer Management**: Background → Monster → Equipment → Effects
-- **Dynamic Styling**: Applies realm-specific color schemes
-- **Effect Rendering**: Animates curse effects
-- **Optimization**: Efficient string concatenation
+### 3.3 Arweave URLの更新
+```bash
+npx hardhat run scripts/02-update-urls.js --network bonsoleil
+```
 
-**SVG Structure**:
+## Step 4: 動作確認
+
+### 4.1 コントラクトテスト
+```bash
+npx hardhat test
+```
+
+### 4.2 ブラウザでの確認
+1. `viewer/index.html`をブラウザで開く
+2. 各パラメータを選択
+3. SVGが正しく表示されることを確認
+
+## 技術詳細
+
+### カラーフィルターの仕組み
+各背景テーマに対して以下のフィルターパラメータを適用：
+- **hueRotate**: 色相回転（0-360度）
+- **saturate**: 彩度調整（1.0 = 100%）
+- **brightness**: 明度調整（1.0 = 100%）
+
+例：
+- Venom（毒）: 緑色強調（hue=120, sat=1.8, bright=1.1）
+- Frost（霜）: 青色強調（hue=200, sat=1.4, bright=1.2）
+- Bloodmoon（血月）: 赤色強調（hue=0, sat=1.5, bright=1.2）
+
+### SVG構造
 ```xml
-<svg viewBox="0 0 400 400">
-  <!-- Background/Realm Layer -->
-  <!-- Monster Species Layer -->  
-  <!-- Equipment Layer -->
-  <!-- Curse Effects Layer -->
+<svg>
+  <defs>
+    <filter id="f0">
+      <feColorMatrix type="hueRotate" values="120"/>
+      <feColorMatrix type="saturate" values="1.80"/>
+      <feComponentTransfer>
+        <feFuncR type="linear" slope="1.10"/>
+        <feFuncG type="linear" slope="1.10"/>
+        <feFuncB type="linear" slope="1.10"/>
+      </feComponentTransfer>
+    </filter>
+  </defs>
+  <image href="[Arweave URL]" x="0" y="0" width="24" height="24"/>
+  <image href="[Base64 Monster]" filter="url(#f0)"/>
+  <image href="[Base64 Item]"/>
+  <image href="[Arweave Effect URL]"/>
 </svg>
 ```
 
-### Layer 4: MaterialBank Contract
-**File**: `contracts/MaterialBank.sol`
+## トラブルシューティング
 
-Stores and serves SVG components for the composition layer.
+### Q: Base64エンコードが不正になる
+A: SVG全体をエンコードしているか確認。`extractSVGContent`関数を使用しない。
 
-**Key Features**:
-- **Component Storage**: All SVG parts indexed by type
-- **Efficient Retrieval**: Gas-optimized component access
-- **Versioning Support**: Multiple versions of components
-- **Batch Updates**: Admin functions for component management
+### Q: フィルターが適用されない
+A: `<defs>`タグ内にフィルター定義があることを確認。
 
-**Component Types**:
-- **Monsters**: 11 creature SVG templates
-- **Items**: 12 equipment SVG overlays
-- **Backgrounds**: 10 realm-specific environments  
-- **Effects**: 12 animated curse effects
+### Q: Arweave画像が表示されない
+A: CORS設定とURLの正しさを確認。
 
-## 📋 System Specifications
-
-### Collection Parameters
-- **Total Supply**: 10,000 NFTs
-- **Generation**: Deterministic based on token ID
-- **Storage**: 100% on-chain (metadata + images)
-- **Standard**: ERC-721 compatible
-
-### Rarity Distribution
-```
-Common:     4,000 (40%)
-Uncommon:   3,000 (30%) 
-Rare:       1,500 (15%)
-Epic:       1,000 (10%)
-Legendary:    500 (5%)
-```
-
-### Gas Optimization Results
-```
-Traditional NFT Contract:  ~300,000 gas per mint
-4-Layer Architecture:       ~60,000 gas per mint
-Optimization:                   80% reduction
-```
-
-## 🚀 Deployment Guide
-
-### Prerequisites
-- Node.js 16+ and npm
-- Hardhat development environment
-- Ethereum wallet with ETH for deployment
-- Network configuration (mainnet/testnet)
-
-### Installation
-
-1. **Clone and install dependencies**
-   ```bash
-   git clone <repository-url>
-   cd main_contract
-   npm install
-   ```
-
-2. **Configure environment**
-   ```bash
-   cp .env.example .env
-   # Edit .env with your private keys and RPC URLs
-   ```
-
-3. **Compile contracts**
-   ```bash
-   npx hardhat compile
-   ```
-
-4. **Run tests**
-   ```bash
-   npx hardhat test
-   ```
-
-### Deployment Sequence
-
-Deploy contracts in the correct order due to dependencies:
-
-```bash
-# 1. Deploy MaterialBank (Layer 4)
-npx hardhat deploy --network mainnet --tags MaterialBank
-
-# 2. Deploy SVGComposer (Layer 3) 
-npx hardhat deploy --network mainnet --tags SVGComposer
-
-# 3. Deploy MetadataBank (Layer 2)
-npx hardhat deploy --network mainnet --tags MetadataBank
-
-# 4. Deploy BankedNFT (Layer 1)
-npx hardhat deploy --network mainnet --tags BankedNFT
-
-# 5. Configure relationships
-npx hardhat run scripts/setup-contracts.js --network mainnet
-```
-
-### Configuration
-
-Update contract addresses after deployment in:
-- `config/contracts.json` - Contract addresses
-- `scripts/setup-contracts.js` - Inter-contract connections
-- Frontend configuration files
-
-## 🧪 Testing
-
-### Test Coverage
-- Unit tests for all contract functions
-- Integration tests for cross-layer communication  
-- Gas usage benchmarks
-- Rarity distribution verification
-- SVG generation validation
-
-### Running Tests
-```bash
-# All tests
-npx hardhat test
-
-# Specific test files
-npx hardhat test test/BankedNFT.test.js
-npx hardhat test test/MetadataBank.test.js
-
-# Gas usage reports
-REPORT_GAS=true npx hardhat test
-
-# Coverage analysis  
-npx hardhat coverage
-```
-
-## 🔧 Development
-
-### Project Structure
-```
-contracts/
-├── BankedNFT.sol              # Layer 1: Main NFT contract
-├── MonsterMetadataBank.sol    # Layer 2: Metadata generation
-├── SVGComposer.sol            # Layer 3: SVG assembly  
-├── MaterialBank.sol           # Layer 4: Component storage
-├── interfaces/
-│   ├── IMetadataBank.sol      # Metadata interface
-│   ├── ISVGComposer.sol       # SVG composer interface
-│   └── IMaterialBank.sol      # Material bank interface
-└── libraries/
-    ├── RarityCalculator.sol   # Rarity logic library
-    ├── SynergyDetector.sol    # Combination detection
-    └── SVGUtils.sol           # SVG manipulation utilities
-
-test/
-├── BankedNFT.test.js         # Main contract tests
-├── MetadataBank.test.js      # Metadata generation tests
-├── SVGComposer.test.js       # SVG assembly tests
-├── MaterialBank.test.js      # Component storage tests
-└── integration/
-    └── FullSystem.test.js    # End-to-end tests
-
-scripts/
-├── deploy.js                 # Deployment script
-├── setup-contracts.js       # Post-deployment configuration
-├── populate-materials.js    # Load SVG components
-└── verify-contracts.js      # Contract verification
-```
-
-### Key Algorithms
-
-#### Token Generation Algorithm
-```solidity
-function generateTraits(uint256 tokenId) internal pure returns (Traits memory) {
-    uint256 seed = uint256(keccak256(abi.encodePacked(tokenId)));
-    
-    return Traits({
-        species: uint8(seed % 10),
-        equipment: uint8((seed / 10) % 10),
-        realm: uint8((seed / 100) % 10),
-        curse: uint8((seed / 1000) % 10)
-    });
-}
-```
-
-#### Rarity Calculation
-```solidity
-function calculateRarity(Traits memory traits, uint256 tokenId) 
-    internal pure returns (Rarity) {
-    
-    Rarity baseRarity = getBaseRarity(tokenId);
-    
-    // Apply synergy bonuses
-    if (hasSpecialCombo(traits.species, traits.equipment)) {
-        baseRarity = upgradeRarity(baseRarity, 2);
-    }
-    
-    if (isLegendaryId(tokenId)) {
-        return Rarity.Legendary;
-    }
-    
-    return baseRarity;
-}
-```
-
-## 📊 Advanced Features
-
-### Synergy System
-**Dual Synergies**: Perfect Species + Equipment combinations
-- Vampire + Wine = "Blood Sommelier" (Legendary)
-- Skeleton + Scythe = "Death's Herald" (Legendary)  
-- Dragon + Crown = "The Fallen Monarch" (Legendary)
-
-**Future Expansions**:
-- Triple Synergies (3 elements)
-- Quad Synergies (4 elements, 0.01% chance)
-- Dynamic rarity adjustments
-
-### Legendary Token IDs (30 Special NFTs)
-Predetermined token IDs with unique stories and guaranteed Legendary status:
-- **#1**: "The Genesis" - The first existence
-- **#666**: "The Beast Awakened" - Forced Demon + Crown combination
-- **#1337**: "The Chosen One" - Elite status (LEET)
-- **#9999**: "The Final Guardian" - Last sentinel
-
-### HEX NFT System Integration
-Optional integration with companion "HEX GENESIS" collection:
-- **65,536 unique NFTs** (0x0000 - 0xFFFF)
-- **4-digit hexadecimal** identities
-- **Cross-collection synergies** and bonuses
-
-## 🔒 Security & Auditing
-
-### Security Measures
-- **Access Control**: Role-based permissions (OpenZeppelin)
-- **Reentrancy Protection**: ReentrancyGuard implementation
-- **Integer Overflow**: SafeMath usage
-- **Input Validation**: Comprehensive parameter checking
-
-### Audit Checklist
-- [ ] External security audit (recommended: Trail of Bits, ConsenSys Diligence)
-- [ ] Gas optimization verification
-- [ ] Metadata generation validation
-- [ ] SVG output security assessment
-- [ ] Cross-contract interaction testing
-
-## 🌍 Network Support
-
-### Supported Networks
-- **Ethereum Mainnet** (Primary deployment)
-- **Polygon** (Layer 2 scaling)
-- **Arbitrum** (Optimistic rollup)
-- **Sepolia/Goerli** (Testnets)
-
-### Contract Addresses
-Update after deployment:
-```javascript
-{
-  "mainnet": {
-    "BankedNFT": "0x...",
-    "MetadataBank": "0x...",
-    "SVGComposer": "0x...",
-    "MaterialBank": "0x..."
-  }
-}
-```
-
-## 📚 Documentation
-
-For detailed technical documentation, see:
-- `docs/4LAYER_SYSTEM_PROPOSAL.md` - Architecture proposal
-- `docs/CONTRACT_DESIGN.md` - Comprehensive design document  
-- `docs/GAS_OPTIMIZATION_ANALYSIS.md` - Gas optimization analysis
-- `docs/DEVELOPMENT_WORKFLOW.md` - Development process
-
-## 🎭 Philosophy
-
-This contract architecture embodies the same principles that Frederick Brooks taught in "The Mythical Man-Month" - there is no silver bullet, but disciplined engineering practices can create elegant solutions to complex problems.
-
-Each layer serves a specific purpose, can be developed and tested independently, yet works together to create something greater than the sum of its parts. Just as Brooks advocated for modular design in software engineering, our 4-layer architecture demonstrates how blockchain systems can benefit from the same principles.
-
-The result is not just a smart contract, but a testament to the power of thoughtful design in the face of technological constraints.
-
----
-
-*"In the realm of cursed nightmares, every number tells a story, every combination births a tragedy, and every smart contract becomes a curator of digital eternity."*
+## 次のステップ
+1. NFTコントラクトの実装（ERC721）
+2. メタデータ生成機能の追加
+3. ミント機能の実装
+4. フロントエンドの構築

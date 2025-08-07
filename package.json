@@ -1,0 +1,36 @@
+{
+  "name": "tragedy-nft-arweave-formal",
+  "version": "1.0.0",
+  "description": "Formal implementation of Tragedy NFT with Arweave hybrid approach",
+  "main": "index.js",
+  "scripts": {
+    "test": "hardhat test",
+    "compile": "hardhat compile",
+    "deploy": "hardhat run scripts/deploy-production.js --network bonsoleil",
+    "deploy-workflow": "hardhat run scripts/01-deploy-all.js --network bonsoleil",
+    "update-urls": "hardhat run scripts/02-update-urls.js --network bonsoleil",
+    "test-composition": "hardhat run scripts/03-test-composition.js --network bonsoleil",
+    "deploy-nft": "hardhat run scripts/04-deploy-nft.js --network bonsoleil",
+    "test-minting": "hardhat run scripts/05-test-minting.js --network bonsoleil"
+  },
+  "keywords": [
+    "nft",
+    "arweave",
+    "ethereum",
+    "solidity"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.0",
+    "@nomiclabs/hardhat-waffle": "^2.0.0",
+    "chai": "^4.2.0",
+    "ethereum-waffle": "^3.0.0",
+    "ethers": "^5.0.0",
+    "hardhat": "^2.8.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.4.0",
+    "dotenv": "^17.0.0"
+  }
+}
