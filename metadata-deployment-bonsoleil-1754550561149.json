@@ -1,9 +1,0 @@
-{
-  "network": "bonsoleil",
-  "deployer": "0xCf20a6EcBBedB403DB466D669229d9Ee379C433f",
-  "timestamp": "2025-08-07T07:09:21.149Z",
-  "contracts": {
-    "metadata": "0x4C42e58f31269fEc6beb2FAB43D39a8A024900b3",
-    "composer": "0x2fdCAaEd0CF84359375a602F45b97c4B0a31aED9"
-  }
-}

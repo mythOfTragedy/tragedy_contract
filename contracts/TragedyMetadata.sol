@@ -20,6 +20,7 @@ interface IArweaveTragedyComposer {
  */
 contract TragedyMetadata {
     IArweaveTragedyComposer public composer;
+    uint256 public constant SHUFFLE_SEED = 2801; // LCG multiplier (prime number) - early distribution
     
     struct SynergyResult {
         bool found;
@@ -33,11 +34,14 @@ contract TragedyMetadata {
     }
     
     function decodeTokenId(uint256 tokenId) public pure returns (uint8 species, uint8 background, uint8 item, uint8 effect) {
-        uint256 seed = uint256(keccak256(abi.encodePacked(tokenId)));
-        species = uint8(seed % 10);
-        background = uint8((seed >> 8) % 10);
-        item = uint8((seed >> 16) % 10);
-        effect = uint8((seed >> 24) % 10);
+        // Use LCG to ensure unique mapping: (tokenId-1) * SHUFFLE_SEED + 1) % 10000
+        uint256 shuffled = ((tokenId - 1) * SHUFFLE_SEED + 1) % 10000;
+        
+        // Decode base-10 digits (each digit 0-9)
+        effect = uint8(shuffled % 10);
+        item = uint8((shuffled / 10) % 10);
+        background = uint8((shuffled / 100) % 10);
+        species = uint8((shuffled / 1000) % 10);
         
         // Check for legendary effect transformations
         effect = getDisplayEffect(species, item, background, effect);
@@ -84,7 +88,8 @@ contract TragedyMetadata {
         string memory backgroundName = IArweaveBackgroundBank(address(composer.backgroundBank())).getBackgroundName(background);
         string memory itemName = IArweaveItemBank(address(composer.itemBank())).getItemName(item);
         // Use the original effect ID for getting the base effect name
-        uint8 originalEffect = uint8((uint256(keccak256(abi.encodePacked(tokenId))) >> 24) % 10);
+        uint256 shuffled = ((tokenId - 1) * SHUFFLE_SEED + 1) % 10000;
+        uint8 originalEffect = uint8(shuffled % 10);
         string memory effectName = IArweaveEffectBank(address(composer.effectBank())).getEffectName(effect);
         
         // For legendary combinations, use the special effect name
@@ -419,8 +424,8 @@ contract TragedyMetadata {
     }
     
     function getBaseRarityLevel(uint256 tokenId) internal pure returns (uint8) {
-        uint256 seed = uint256(keccak256(abi.encodePacked(tokenId)));
-        uint256 roll = seed % 100;
+        // Use tokenId directly for deterministic rarity distribution
+        uint256 roll = (tokenId * 13) % 100;
         
         if (roll < 40) return 0; // Common 40%
         if (roll < 70) return 1; // Uncommon 30%
