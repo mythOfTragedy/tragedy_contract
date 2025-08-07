@@ -48,13 +48,13 @@ contract TragedyMetadata {
     }
     
     function getDisplayEffect(uint8 species, uint8 item, uint8 background, uint8 effect) internal pure returns (uint8) {
-        // Legendary combination 1: Skeleton + Scythe + Shadow + effect 3 (was Mindblast) → Blackout
-        if (species == 9 && item == 6 && background == 9 && effect == 3) {
+        // Legendary combination 1: Skeleton + Scythe + Shadow + Mind Blast → Blackout
+        if (species == 9 && item == 6 && background == 9 && effect == 1) {
             return 10; // Blackout effect
         }
         
-        // Legendary combination 2: Frankenstein + Poison + Venom + effect 3 (was Seizure) → Matrix
-        if (species == 2 && item == 3 && background == 4 && effect == 3) {
+        // Legendary combination 2: Frankenstein + Poison + Venom + Seizure → Matrix
+        if (species == 2 && item == 3 && background == 4 && effect == 0) {
             return 11; // Matrix effect
         }
         
@@ -273,7 +273,7 @@ contract TragedyMetadata {
             return SynergyResult(true, "Toxic Miasma", "A poisonous fog that corrupts all it touches.", 1);
         }
         
-        if (keccak256(bytes(effect)) == keccak256(bytes("Mindblast")) && 
+        if (keccak256(bytes(effect)) == keccak256(bytes("Mind Blast")) && 
             keccak256(bytes(background)) == keccak256(bytes("Void"))) {
             return SynergyResult(true, "Mental Collapse", "The void between thoughts where sanity dies.", 1);
         }
@@ -283,7 +283,7 @@ contract TragedyMetadata {
             return SynergyResult(true, "Crimson Thunder", "Blood-red lightning that strikes with divine wrath.", 1);
         }
         
-        if (keccak256(bytes(effect)) == keccak256(bytes("Brainwash")) && 
+        if (keccak256(bytes(effect)) == keccak256(bytes("Brain Wash")) && 
             keccak256(bytes(background)) == keccak256(bytes("Corruption"))) {
             return SynergyResult(true, "Mind Corruption", "Thoughts twisted into weapons against their owner.", 1);
         }
@@ -391,8 +391,8 @@ contract TragedyMetadata {
         else if (effectHash == keccak256(bytes("Blizzard"))) return "as frozen winds tear reality.";
         else if (effectHash == keccak256(bytes("Lightning"))) return "beneath electric fury.";
         else if (effectHash == keccak256(bytes("Meteor"))) return "while heavens rain destruction.";
-        else if (effectHash == keccak256(bytes("Mindblast"))) return "its screams shatter sanity.";
-        else if (effectHash == keccak256(bytes("Brainwash"))) return "enslaving minds with madness.";
+        else if (effectHash == keccak256(bytes("Mind Blast"))) return "its screams shatter sanity.";
+        else if (effectHash == keccak256(bytes("Brain Wash"))) return "enslaving minds with madness.";
         else if (effectHash == keccak256(bytes("Confusion"))) return "spreading fractured chaos.";
         else if (effectHash == keccak256(bytes("Seizure"))) return "causing reality to convulse.";
         else if (effectHash == keccak256(bytes("Poisoning"))) return "leaving toxic death behind.";

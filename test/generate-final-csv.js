@@ -2,13 +2,13 @@ const fs = require("fs");
 
 async function main() {
     console.log("📊 Generating FINAL Token CSV...\n");
+    const SEED = 4567;
+    
     console.log("Configuration:");
     console.log("- Seed: 4567 (perfect distribution)");
     console.log("- Soul Harvester: #1687");
     console.log("- Toxic Abomination: #2097");
-    console.log("- Both use effect=3 (Confusion)\n");
-
-    const SEED = 4567;
+    console.log("- Both use effect=3 (Meteor)\n");
 
     // Monster, Item, Background, Effect names - MUST MATCH ON-CHAIN BANK CONTRACTS!
     const monsterNames = ["Werewolf", "Goblin", "Frankenstein", "Demon", "Dragon", "Zombie", "Vampire", "Mummy", "Succubus", "Skeleton"];
@@ -32,12 +32,15 @@ async function main() {
 
     // Function to get display effect (with legendary transformations)
     function getDisplayEffect(species, item, background, effect) {
-        // Legendary combination 1: Skeleton + Scythe + Shadow + effect 1 (Mind Blast) → Blackout
+        // Legendary combination 1: Skeleton + Scythe + Shadow + Mind Blast → Blackout
         if (species === 9 && item === 6 && background === 9 && effect === 1) {
             return { id: 10, name: "Blackout" };
         }
         
-        // Note: Matrix transformation is not needed in frontend
+        // Legendary combination 2: Frankenstein + Poison + Venom + Seizure → Matrix
+        if (species === 2 && item === 3 && background === 4 && effect === 0) {
+            return { id: 11, name: "Matrix" };
+        }
         
         return { id: effect, name: effectNames[effect] };
     }
@@ -75,11 +78,11 @@ async function main() {
             return { found: true, title: "Eternal Warrior", type: "quad", description: "An immortal ancient warrior wrapped in void flames. Time means nothing to this burning guardian." };
         }
         
-        if (monster === "Werewolf" && item === "Head" && background === "Abyss" && effect === "Confusion") {
+        if (monster === "Werewolf" && item === "Amulet" && background === "Abyss" && effect === "Confusion") {
             return { found: true, title: "Lunatic Alpha", type: "quad", description: "The pack leader consumed by abyssal madness. It carries trophies of those who challenged its insanity." };
         }
         
-        if (monster === "Zombie" && item === "Arm" && background === "Decay" && effect === "Poisoning") {
+        if (monster === "Zombie" && item === "Shoulder" && background === "Decay" && effect === "Poisoning") {
             return { found: true, title: "Rotting Collector", type: "quad", description: "A putrid corpse collector spreading toxic decay. Each arm in its collection tells a story of plague." };
         }
         
@@ -88,11 +91,11 @@ async function main() {
         }
         
         // Dual Synergies - Equipment transformations
-        if (monster === "Werewolf" && item === "Head") {
-            return { found: true, title: "The Alpha's Trophy", type: "dual", description: "What appears to be a simple crown is revealed as the severed head of the previous pack leader." };
+        if (monster === "Werewolf" && item === "Amulet") {
+            return { found: true, title: "The Alpha's Trophy", type: "dual", description: "What appears to be a simple amulet is revealed as the severed head of the previous pack leader." };
         }
         
-        if (monster === "Frankenstein" && item === "Arm") {
+        if (monster === "Frankenstein" && item === "Shoulder") {
             return { found: true, title: "The Collector", type: "dual", description: "The shoulder armor is actually a collection of harvested arms, still twitching with unnatural life." };
         }
         
@@ -117,7 +120,7 @@ async function main() {
             return { found: true, title: "Toxic Miasma", type: "dual", description: "A poisonous fog that corrupts all it touches." };
         }
         
-        if (effect === "Mindblast" && background === "Void") {
+        if (effect === "Mind Blast" && background === "Void") {
             return { found: true, title: "Mental Collapse", type: "dual", description: "The void between thoughts where sanity dies." };
         }
         
@@ -125,7 +128,7 @@ async function main() {
             return { found: true, title: "Crimson Thunder", type: "dual", description: "Blood-red lightning that strikes with divine wrath." };
         }
         
-        if (effect === "Brainwash" && background === "Corruption") {
+        if (effect === "Brain Wash" && background === "Corruption") {
             return { found: true, title: "Mind Corruption", type: "dual", description: "Thoughts twisted into weapons against their owner." };
         }
         
