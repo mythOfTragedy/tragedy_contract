@@ -192,15 +192,58 @@ contract TragedyMetadata {
         if (keccak256(bytes(monster)) == keccak256(bytes("Skeleton")) &&
             keccak256(bytes(item)) == keccak256(bytes("Scythe")) &&
             keccak256(bytes(background)) == keccak256(bytes("Shadow")) &&
-            keccak256(bytes(effect)) == keccak256(bytes("Blackout"))) {
+            keccak256(bytes(effect)) == keccak256(bytes("Mind Blast"))) {
             return SynergyResult(true, "Soul Harvester", "The ultimate death incarnate. This skeletal reaper cuts through dimensions, harvesting souls across all realities in absolute darkness.", 3);
         }
         
         if (keccak256(bytes(monster)) == keccak256(bytes("Frankenstein")) &&
             keccak256(bytes(item)) == keccak256(bytes("Poison")) &&
             keccak256(bytes(background)) == keccak256(bytes("Venom")) &&
-            keccak256(bytes(effect)) == keccak256(bytes("Matrix"))) {
+            keccak256(bytes(effect)) == keccak256(bytes("Seizure"))) {
             return SynergyResult(true, "Toxic Abomination", "A monstrous fusion of flesh and digital poison. Its body constantly glitches between physical and virtual toxicity.", 3);
+        }
+        
+        // Check remaining Quad Synergies
+        if (keccak256(bytes(monster)) == keccak256(bytes("Demon")) &&
+            keccak256(bytes(item)) == keccak256(bytes("Torch")) &&
+            keccak256(bytes(background)) == keccak256(bytes("Inferno")) &&
+            keccak256(bytes(effect)) == keccak256(bytes("Lightning"))) {
+            return SynergyResult(true, "Hellstorm Avatar", "The incarnation of hell's tempest. Lightning-wreathed flames announce its apocalyptic arrival.", 3);
+        }
+        
+        if (keccak256(bytes(monster)) == keccak256(bytes("Succubus")) &&
+            keccak256(bytes(item)) == keccak256(bytes("Magic Wand")) &&
+            keccak256(bytes(background)) == keccak256(bytes("Corruption")) &&
+            keccak256(bytes(effect)) == keccak256(bytes("Brain Wash"))) {
+            return SynergyResult(true, "Mind Empress", "The corrupted empress who enslaves minds. Her wand weaves thoughts into chains of eternal servitude.", 3);
+        }
+        
+        if (keccak256(bytes(monster)) == keccak256(bytes("Mummy")) &&
+            keccak256(bytes(item)) == keccak256(bytes("Sword")) &&
+            keccak256(bytes(background)) == keccak256(bytes("Void")) &&
+            keccak256(bytes(effect)) == keccak256(bytes("Burning"))) {
+            return SynergyResult(true, "Eternal Warrior", "An immortal ancient warrior wrapped in void flames. Time means nothing to this burning guardian.", 3);
+        }
+        
+        if (keccak256(bytes(monster)) == keccak256(bytes("Werewolf")) &&
+            keccak256(bytes(item)) == keccak256(bytes("Amulet")) &&
+            keccak256(bytes(background)) == keccak256(bytes("Abyss")) &&
+            keccak256(bytes(effect)) == keccak256(bytes("Confusion"))) {
+            return SynergyResult(true, "Lunatic Alpha", "The pack leader consumed by abyssal madness. It carries trophies of those who challenged its insanity.", 3);
+        }
+        
+        if (keccak256(bytes(monster)) == keccak256(bytes("Zombie")) &&
+            keccak256(bytes(item)) == keccak256(bytes("Shoulder")) &&
+            keccak256(bytes(background)) == keccak256(bytes("Decay")) &&
+            keccak256(bytes(effect)) == keccak256(bytes("Poisoning"))) {
+            return SynergyResult(true, "Rotting Collector", "A putrid corpse collector spreading toxic decay. Each arm in its collection tells a story of plague.", 3);
+        }
+        
+        if (keccak256(bytes(monster)) == keccak256(bytes("Goblin")) &&
+            keccak256(bytes(item)) == keccak256(bytes("Shield")) &&
+            keccak256(bytes(background)) == keccak256(bytes("Frost")) &&
+            keccak256(bytes(effect)) == keccak256(bytes("Blizzard"))) {
+            return SynergyResult(true, "Frozen Guardian", "The ice sprite defending eternal permafrost. Its shield channels blizzards that freeze time itself.", 3);
         }
         
         // Check important Dual Synergies (Equipment transformation synergies)

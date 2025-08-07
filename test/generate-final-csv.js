@@ -62,6 +62,31 @@ async function main() {
             return { found: true, title: "Toxic Abomination", type: "quad", description: "An undying monster saturated with poison. Its body convulses eternally from the toxins it cannot expel." };
         }
         
+        // Add remaining Quad Synergies
+        if (monster === "Demon" && item === "Torch" && background === "Inferno" && effect === "Lightning") {
+            return { found: true, title: "Hellstorm Avatar", type: "quad", description: "The incarnation of hell's tempest. Lightning-wreathed flames announce its apocalyptic arrival." };
+        }
+        
+        if (monster === "Succubus" && item === "Magic Wand" && background === "Corruption" && effect === "Brain Wash") {
+            return { found: true, title: "Mind Empress", type: "quad", description: "The corrupted empress who enslaves minds. Her wand weaves thoughts into chains of eternal servitude." };
+        }
+        
+        if (monster === "Mummy" && item === "Sword" && background === "Void" && effect === "Burning") {
+            return { found: true, title: "Eternal Warrior", type: "quad", description: "An immortal ancient warrior wrapped in void flames. Time means nothing to this burning guardian." };
+        }
+        
+        if (monster === "Werewolf" && item === "Head" && background === "Abyss" && effect === "Confusion") {
+            return { found: true, title: "Lunatic Alpha", type: "quad", description: "The pack leader consumed by abyssal madness. It carries trophies of those who challenged its insanity." };
+        }
+        
+        if (monster === "Zombie" && item === "Arm" && background === "Decay" && effect === "Poisoning") {
+            return { found: true, title: "Rotting Collector", type: "quad", description: "A putrid corpse collector spreading toxic decay. Each arm in its collection tells a story of plague." };
+        }
+        
+        if (monster === "Goblin" && item === "Shield" && background === "Frost" && effect === "Blizzard") {
+            return { found: true, title: "Frozen Guardian", type: "quad", description: "The ice sprite defending eternal permafrost. Its shield channels blizzards that freeze time itself." };
+        }
+        
         // Dual Synergies - Equipment transformations
         if (monster === "Werewolf" && item === "Head") {
             return { found: true, title: "The Alpha's Trophy", type: "dual", description: "What appears to be a simple crown is revealed as the severed head of the previous pack leader." };
