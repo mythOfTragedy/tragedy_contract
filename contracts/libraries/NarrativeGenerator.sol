@@ -77,7 +77,7 @@ library NarrativeGenerator {
             else titleCore = "Shadow Gremlin";
         }
         
-        return string(abi.encodePacked(titlePrefix, titleCore, " #", toString(tokenId)));
+        return string(abi.encodePacked(titlePrefix, titleCore));
     }
     
     function toString(uint256 value) internal pure returns (string memory) {
