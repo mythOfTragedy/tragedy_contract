@@ -151,6 +151,88 @@ async function main() {
         return { found: false, title: "", type: "none", description: "" };
     }
 
+    // Function to get legendary title
+    function getLegendaryTitle(tokenId) {
+        const legendaryTitles = {
+            1: "The Genesis",
+            7: "The Seventh Seal",
+            13: "The Cursed",
+            23: "The Enigma",
+            42: "The Answer",
+            86: "The Vanisher",
+            100: "The Centurion",
+            111: "Trinity Gate",
+            187: "Death's Contract",
+            217: "The Shining",
+            333: "The Half Beast",
+            404: "The Lost Soul",
+            555: "The Pentacle",
+            616: "The True Beast",
+            666: "The Beast Awakened",
+            777: "Lucky Seven",
+            911: "The Final Call",
+            999: "The Gatekeeper",
+            1000: "The Millennial",
+            1111: "The Awakening",
+            1337: "The Chosen One",
+            1347: "The Black Death",
+            1408: "The Haunted Room",
+            1492: "The Discovery",
+            1692: "The Witch Hunter",
+            1776: "The Revolution",
+            2187: "The Exponential Death",
+            3141: "Pi's Madness",
+            4077: "The Field Medic",
+            5150: "The Insane",
+            6174: "Kaprekar's Curse",
+            7777: "Fortune's Avatar",
+            8128: "Perfect Despair",
+            9999: "The Final Guardian"
+        };
+        return legendaryTitles[tokenId] || "";
+    }
+    
+    // Function to get legendary description
+    function getLegendaryDescription(tokenId) {
+        const legendaryDescriptions = {
+            1: "The first manifestation. Where all nightmares begin.",
+            7: "The breaking of the seventh seal unleashes the final judgment.",
+            13: "Forever marked by misfortune, carrying curses across realms.",
+            23: "Neither mortal nor divine, existing between all states.",
+            42: "The answer to life, the universe, and everything cursed.",
+            86: "Those who speak its name vanish from memory itself.",
+            100: "The centurion who led a hundred souls to damnation.",
+            111: "Where three paths meet, the gateway to trinity opens.",
+            187: "The code of murder, written in blood and binding.",
+            217: "Room 217 - where madness overwrites reality.",
+            333: "Half the beast's power, twice the hunger for souls.",
+            404: "A soul that exists yet cannot be found - eternally lost.",
+            555: "The five-pointed star that channels dark transformations.",
+            616: "The original number of the beast, older and more terrible.",
+            666: "The beast of Revelation awakens to consume the light.",
+            777: "Blessed and cursed in equal measure, fortune's double edge.",
+            911: "The emergency call that goes unanswered in the void.",
+            999: "The keeper of the final gate before absolute ending.",
+            1000: "The first of the new millennium, bearing ancient promises.",
+            1111: "When all align, the awakening cannot be stopped.",
+            1337: "Elite among the damned, chosen for a darker purpose.",
+            1347: "The year death swept across continents, leaving only plague.",
+            1408: "A room that exists outside time, trapping all who enter.",
+            1492: "The discovery that changed worlds and cursed them all.",
+            1692: "Salem's flames still burn in this hunter of the accused.",
+            1776: "Revolution born from blood, freedom paid in souls.",
+            2187: "Three to the seventh power - exponential horror multiplied.",
+            3141: "The irrational number that drives mathematicians to madness.",
+            4077: "The medic who couldn't save anyone, not even themselves.",
+            5150: "Van Halen's code for the involuntarily insane.",
+            6174: "The mathematical loop that traps consciousness forever.",
+            7777: "Quadruple luck becomes a curse of infinite probability.",
+            8128: "The perfect number that brings perfect despair.",
+            9999: "The last guardian before the void consumes all."
+        };
+        return legendaryDescriptions[tokenId] || "";
+    }
+
     // Function to generate title - matches NarrativeGenerator.sol
     function generateTitle(monster, background, item, tokenId) {
         let titlePrefix = "";
@@ -392,12 +474,20 @@ async function main() {
         if (synergy.found) synergyCount++;
         
         // Generate name and story
-        let name = synergy.found ? synergy.title : generateTitle(monsterName, backgroundName, itemName, tokenId);
+        let name, story;
         
-        // Generate story using narrative description from contract
-        let story = synergy.found ? 
-            synergy.description || `A legendary ${monsterName} with extraordinary powers.` :
-            getNarrativeDescription(monsterName, backgroundName, itemName, effectName);
+        // Check if it's a Legendary ID first
+        const legendaryTitle = getLegendaryTitle(tokenId);
+        if (legendaryTitle) {
+            name = legendaryTitle;
+            story = getLegendaryDescription(tokenId);
+        } else if (synergy.found) {
+            name = synergy.title;
+            story = synergy.description || `A legendary ${monsterName} with extraordinary powers.`;
+        } else {
+            name = generateTitle(monsterName, backgroundName, itemName, tokenId);
+            story = getNarrativeDescription(monsterName, backgroundName, itemName, effectName);
+        }
         
         // Calculate rarity
         const rarity = calculateRarity(tokenId, synergy.type);

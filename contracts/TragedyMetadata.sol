@@ -14,12 +14,19 @@ interface IArweaveTragedyComposer {
     function effectBank() external view returns (address);
 }
 
+interface ILegendaryBank {
+    function isLegendaryId(uint256 tokenId) external view returns (bool);
+    function getLegendaryTitle(uint256 tokenId) external view returns (string memory);
+    function getLegendaryDescription(uint256 tokenId) external view returns (string memory);
+}
+
 /**
  * @title TragedyMetadataV5
  * @notice Implements proper attribute names and adds Curse+Realm synergies
  */
 contract TragedyMetadata {
     IArweaveTragedyComposer public composer;
+    ILegendaryBank public legendaryBank;
     uint256 public constant SHUFFLE_SEED = 4567; // LCG multiplier (prime number) - perfect distribution
     
     struct SynergyResult {
@@ -29,8 +36,9 @@ contract TragedyMetadata {
         uint8 synergyType; // 0=none, 1=dual, 2=trinity, 3=quad
     }
     
-    constructor(address _composer) {
+    constructor(address _composer, address _legendaryBank) {
         composer = IArweaveTragedyComposer(_composer);
+        legendaryBank = ILegendaryBank(_legendaryBank);
     }
     
     function decodeTokenId(uint256 tokenId) public pure returns (uint8 species, uint8 background, uint8 item, uint8 effect) {
@@ -107,7 +115,11 @@ contract TragedyMetadata {
         string memory description;
         string memory displayItemName = itemName;
         
-        if (synergy.found) {
+        // Legendary IDs get special treatment
+        if (legendaryBank.isLegendaryId(tokenId)) {
+            title = legendaryBank.getLegendaryTitle(tokenId);
+            description = legendaryBank.getLegendaryDescription(tokenId);
+        } else if (synergy.found) {
             title = synergy.title;
             description = synergy.description;
             
@@ -518,9 +530,9 @@ contract TragedyMetadata {
         uint8 effect,
         uint256 tokenId,
         uint8 synergyType
-    ) internal pure returns (string memory) {
+    ) internal view returns (string memory) {
         // Check if it's a Legendary ID
-        if (isLegendaryId(tokenId)) {
+        if (legendaryBank.isLegendaryId(tokenId)) {
             return "Legendary";
         }
         
@@ -543,19 +555,6 @@ contract TragedyMetadata {
         uint8 baseLevel = getBaseRarityLevel(tokenId);
         
         return getRarityName(baseLevel);
-    }
-    
-    function isLegendaryId(uint256 tokenId) internal pure returns (bool) {
-        // 30 Legendary IDs from DESIGN.md
-        return tokenId == 1 || tokenId == 7 || tokenId == 13 || tokenId == 23 || 
-               tokenId == 42 || tokenId == 86 || tokenId == 100 || tokenId == 111 || 
-               tokenId == 187 || tokenId == 217 || tokenId == 333 || tokenId == 404 || 
-               tokenId == 555 || tokenId == 616 || tokenId == 666 || tokenId == 777 || 
-               tokenId == 911 || tokenId == 999 || tokenId == 1000 || tokenId == 1111 || 
-               tokenId == 1337 || tokenId == 1347 || tokenId == 1408 || tokenId == 1492 || 
-               tokenId == 1692 || tokenId == 1776 || tokenId == 2187 || tokenId == 3141 || 
-               tokenId == 4077 || tokenId == 5150 || tokenId == 6174 || tokenId == 7777 || 
-               tokenId == 8128 || tokenId == 9999;
     }
     
     function getBaseRarityLevel(uint256 tokenId) internal pure returns (uint8) {

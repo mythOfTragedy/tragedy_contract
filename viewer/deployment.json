@@ -1,18 +1,19 @@
 {
   "network": "bonsoleil",
-  "timestamp": "2025-08-07T10:24:40.148Z",
+  "timestamp": "2025-08-07T12:44:01.383Z",
   "note": "Clean deployment following DEPLOYMENT_GUIDE.md",
   "contracts": {
-    "monsterBank1": "0x50754f239beE0939Ce485a9Bc7a0223e30D96e09",
-    "monsterBank2": "0xadDf3cC93fEB2FA04641e0dA9FF8C09C2994B040",
-    "itemBank1": "0xD76F954ACFc24fbd02Fa0d4c0bD3c8Fc60F2E5d9",
-    "itemBank2": "0x88B32903669ba7DeE169f151B4c38a2358722734",
-    "monsterBank": "0xe9903C1ba58C593BB81C11179D368c5A8ac82496",
-    "itemBank": "0xF0091E69c1F5d8276EAFbb326dB746F2df3D64Ec",
-    "backgroundBank": "0x8d3dA8B29fEe066dc167Fd1b7275F16E48de5834",
-    "effectBank": "0x9d7C6B46E94d9a11D8CaBaDad4D0eA2084426350",
-    "composer": "0x5FbFa836052aF5eE6d10f4B2A6521B5CAcc16bcd",
-    "metadata": "0xbB49b3d30C7a92A7Ea3C9EeA28A6050ec82f0fa2",
-    "bankedNFT": "0xb168700022606D0e833B2A56C90f5A4BEd0a38aA"
+    "monsterBank1": "0x60093dA5A607C32C9dF06d938F0F906C60cB2793",
+    "monsterBank2": "0x509Ee800DB8546b3618baB488Ce76CAfC17623fc",
+    "itemBank1": "0x8FEF6b571b8189ad4509fBa7B38260990ba72Da4",
+    "itemBank2": "0xfb5992B2269ac9FC4b68FaE780f0B9d38bD8e438",
+    "monsterBank": "0xb1b87379BA1b74fd859ab05FB15FF7a35da7808F",
+    "itemBank": "0xa2CDD76dE07C35506882C3B6a3bb46d7840b8559",
+    "backgroundBank": "0x8c30F1eD9Fc58bfEBb2F80596a2A9b1A7737Bb6E",
+    "effectBank": "0x6B05E8c7eB7688Cd3fbE228c79B6B1E40B377307",
+    "composer": "0x7B6c09495557C3E3Fa78F899806FB849bd24A933",
+    "legendaryBank": "0xf6691E452fc377c3ea4975696bD20E3CCe4d686a",
+    "metadata": "0x565B793c191FE9C0D9980eCDB05A1471aBA198b4",
+    "bankedNFT": "0xD8543363D99314fdE362014CF89CF6b5417d2B68"
   }
 }

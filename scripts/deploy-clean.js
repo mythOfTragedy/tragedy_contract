@@ -100,12 +100,19 @@ async function main() {
         deployment.contracts.composer = composer.address;
         console.log("✅ Composer:", composer.address);
 
-        // ========== Layer 3: Metadata ==========
-        console.log("\n📝 Layer 3: Deploying Metadata...\n");
+        // ========== Layer 3: Banks and Metadata ==========
+        console.log("\n📝 Layer 3: Deploying Legendary Bank and Metadata...\n");
+
+        console.log("Deploying LegendaryBank...");
+        const LegendaryBank = await ethers.getContractFactory("LegendaryBank");
+        const legendaryBank = await LegendaryBank.deploy();
+        await legendaryBank.deployed();
+        deployment.contracts.legendaryBank = legendaryBank.address;
+        console.log("✅ LegendaryBank:", legendaryBank.address);
 
         console.log("Deploying TragedyMetadata...");
         const Metadata = await ethers.getContractFactory("TragedyMetadata");
-        const metadata = await Metadata.deploy(composer.address);
+        const metadata = await Metadata.deploy(composer.address, legendaryBank.address);
         await metadata.deployed();
         deployment.contracts.metadata = metadata.address;
         console.log("✅ Metadata:", metadata.address);
