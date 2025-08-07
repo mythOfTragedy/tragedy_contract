@@ -171,6 +171,28 @@ A: `<defs>`タグ内にフィルター定義があることを確認。
 ### Q: Arweave画像が表示されない
 A: CORS設定とURLの正しさを確認。
 
+## エフェクトマテリアルの差し替え
+
+### 概要
+エフェクト画像（Meteor、Burningなど）は、既存のコントラクトを更新することで簡単に差し替えることができます。
+
+### 差し替え手順
+詳細な手順については、[エフェクト差し替えガイド](docs/EFFECT_REPLACEMENT_GUIDE.md)を参照してください。
+
+#### 簡易手順
+1. 新しいエフェクト画像をArweaveにアップロード
+2. 以下のスクリプトを実行：
+```bash
+# Bon-Soleil Testnetの場合
+npx hardhat run scripts/updateEffectsBonSoleil.js --network bonsoleil
+```
+
+### 検証済みの差し替え例
+- **Meteor (ID 3)**: `https://arweave.net/qMxaHOR-v_PojOK-fFGVe32k_wPyWmyacyhoUTjvUTE`
+- **Burning (ID 8)**: `https://arweave.net/pQ8Vd7LVqQIBKSbAOoq26rqKKggxF-qAsSyZfwU_ZgA`
+
+これらのURLへの差し替えは、Bon-Soleil Testnetで正常動作を確認済みです。
+
 ## 次のステップ
 1. NFTコントラクトの実装（ERC721）
 2. メタデータ生成機能の追加
