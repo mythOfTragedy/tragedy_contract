@@ -20,7 +20,7 @@ interface IArweaveTragedyComposer {
  */
 contract TragedyMetadata {
     IArweaveTragedyComposer public composer;
-    uint256 public constant SHUFFLE_SEED = 2801; // LCG multiplier (prime number) - early distribution
+    uint256 public constant SHUFFLE_SEED = 4567; // LCG multiplier (prime number) - perfect distribution
     
     struct SynergyResult {
         bool found;
@@ -48,13 +48,13 @@ contract TragedyMetadata {
     }
     
     function getDisplayEffect(uint8 species, uint8 item, uint8 background, uint8 effect) internal pure returns (uint8) {
-        // Legendary combination 1: Skeleton + Scythe + Shadow + Mind Blast → Blackout
-        if (species == 9 && item == 6 && background == 9 && effect == 1) {
+        // Legendary combination 1: Skeleton + Scythe + Shadow + effect 3 (was Mindblast) → Blackout
+        if (species == 9 && item == 6 && background == 9 && effect == 3) {
             return 10; // Blackout effect
         }
         
-        // Legendary combination 2: Frankenstein + Poison + Venom + Seizure → Matrix
-        if (species == 2 && item == 3 && background == 4 && effect == 0) {
+        // Legendary combination 2: Frankenstein + Poison + Venom + effect 3 (was Seizure) → Matrix
+        if (species == 2 && item == 3 && background == 4 && effect == 3) {
             return 11; // Matrix effect
         }
         
@@ -93,9 +93,9 @@ contract TragedyMetadata {
         string memory effectName = IArweaveEffectBank(address(composer.effectBank())).getEffectName(effect);
         
         // For legendary combinations, use the special effect name
-        if (effect == 10 && originalEffect == 1 && species == 9 && item == 6 && background == 9) {
+        if (effect == 10 && originalEffect == 3 && species == 9 && item == 6 && background == 9) {
             effectName = "Blackout";
-        } else if (effect == 11 && originalEffect == 0 && species == 2 && item == 3 && background == 4) {
+        } else if (effect == 11 && originalEffect == 3 && species == 2 && item == 3 && background == 4) {
             effectName = "Matrix";
         }
         
