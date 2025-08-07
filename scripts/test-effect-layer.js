@@ -61,10 +61,10 @@ async function main() {
     );
     
     console.log("\n📍 EffectBank Address:", effectBank.address);
-    console.log("\n🔍 Testing all effects (0-9):");
-    console.log("  📝 Note: Effects will be expanded to 12 in the next update");
+    console.log("\n🔍 Testing all effects (0-11):");
+    console.log("  📝 Note: Effects expanded to 12 (was 10)");
     
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 12; i++) {
       const name = await effectBank.getEffectName(i);
       const url = await effectBank.getEffectUrl(i);
       console.log(`  Effect ${i}: ${name}`);
@@ -93,12 +93,12 @@ async function main() {
     }
     
     console.log("\n📌 EffectBank edge cases:");
-    console.log("  📝 Note: Currently supports 10 effects (0-9), will expand to 12 in next update");
+    console.log("  📝 Note: Now supports 12 effects (0-11)");
     try {
-      await effectBank.getEffectName(10);
-      console.log("  ❌ FAIL: Should revert for ID 10");
+      await effectBank.getEffectName(12);
+      console.log("  ❌ FAIL: Should revert for ID 12");
     } catch (e) {
-      console.log("  ✅ PASS: Correctly reverted for ID 10");
+      console.log("  ✅ PASS: Correctly reverted for ID 12");
     }
     
     try {
@@ -128,7 +128,7 @@ async function main() {
     console.log("=".repeat(60));
     console.log("\n📊 Summary:");
     console.log("  - BackgroundBank: All 10 backgrounds with Arweave URLs ✓");
-    console.log("  - EffectBank: All 10 effects with Arweave URLs ✓");
+    console.log("  - EffectBank: All 12 effects with Arweave URLs ✓");
     console.log("  - Edge cases: Properly handled ✓");
     console.log("  - Arweave integration: Working ✓");
     console.log("\n💡 Next: Test the Composer (integration layer)");

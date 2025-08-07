@@ -62,6 +62,29 @@ async function main() {
     fs.writeFileSync(updatedFilename, JSON.stringify(deployment, null, 2));
     console.log("\n📄 Updated deployment log:", updatedFilename);
 
+    // Update viewer deployment.json
+    const viewerDeployment = {
+      network: hre.network.name,
+      timestamp: new Date().toISOString(),
+      note: "Auto-updated by NFT deployment script",
+      contracts: {
+        bankedNFT: nft.address,
+        metadata: metadata.address,
+        composer: deployment.contracts.composer,
+        monsterBank: deployment.contracts.monsterBank,
+        itemBank: deployment.contracts.itemBank,
+        backgroundBank: deployment.contracts.backgroundBank,
+        effectBank: deployment.contracts.effectBank,
+        monsterBank1: deployment.contracts.monsterBank1,
+        monsterBank2: deployment.contracts.monsterBank2,
+        itemBank1: deployment.contracts.itemBank1,
+        itemBank2: deployment.contracts.itemBank2
+      }
+    };
+    
+    fs.writeFileSync('viewer/deployment.json', JSON.stringify(viewerDeployment, null, 2));
+    console.log("📄 Updated viewer/deployment.json");
+
     // Summary
     console.log("\n" + "=".repeat(60));
     console.log("NFT DEPLOYMENT COMPLETE!");

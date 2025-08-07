@@ -127,6 +127,38 @@ async function main() {
     fs.writeFileSync(logFilename, JSON.stringify(deploymentLog, null, 2));
     console.log("\n📄 Deployment log saved to:", logFilename);
 
+    // Update viewer deployment.json
+    let existingViewerDeployment = {};
+    try {
+      existingViewerDeployment = JSON.parse(fs.readFileSync('viewer/deployment.json', 'utf8'));
+    } catch (e) {
+      console.log("📋 No existing viewer/deployment.json found, creating new one");
+    }
+
+    const viewerDeployment = {
+      network: hre.network.name,
+      timestamp: new Date().toISOString(),
+      note: "Auto-updated by deployment script",
+      contracts: {
+        // Keep existing NFT and metadata contracts if they exist
+        bankedNFT: existingViewerDeployment.contracts?.bankedNFT || "NOT_DEPLOYED",
+        metadata: existingViewerDeployment.contracts?.metadata || "NOT_DEPLOYED",
+        // Update with new deployments
+        composer: composer.address,
+        monsterBank: monsterBank.address,
+        itemBank: itemBank.address,
+        backgroundBank: backgroundBank.address,
+        effectBank: effectBank.address,
+        monsterBank1: monsterBank1.address,
+        monsterBank2: monsterBank2.address,
+        itemBank1: itemBank1.address,
+        itemBank2: itemBank2.address
+      }
+    };
+    
+    fs.writeFileSync('viewer/deployment.json', JSON.stringify(viewerDeployment, null, 2));
+    console.log("📄 Updated viewer/deployment.json");
+
     // Summary
     console.log("\n" + "=".repeat(60));
     console.log("DEPLOYMENT COMPLETE!");

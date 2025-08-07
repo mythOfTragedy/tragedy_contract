@@ -9,7 +9,7 @@ pragma solidity ^0.8.20;
 contract ArweaveEffectBank {
     mapping(uint8 => string) private effectUrls;
     
-    string[10] public effectNames = [
+    string[12] public effectNames = [
         "Seizure",
         "Mindblast",
         "Confusion",
@@ -19,7 +19,9 @@ contract ArweaveEffectBank {
         "Lightning",
         "Blizzard",
         "Burning",
-        "Brainwash"
+        "Brainwash",
+        "Blackout",
+        "Matrix"
     ];
     
     address public owner;
@@ -46,20 +48,22 @@ contract ArweaveEffectBank {
         effectUrls[7] = "https://ouhfrxzuptiwk6ri3huio3lyzumt56yrdwomosvuhreptaygeezq.arweave.net/dQ5Y3zR80WV6KNnoh214zRk--xEdnMdKtDxI-YMGITM";
         effectUrls[8] = "https://4xilt2jbun6zo5xus37tjclqofafrntncwxecnnltxclbxtwmuya.arweave.net/5dC56SGjfZd29Jb_NIlwcUBYtm0VrkE1q53EsN52ZTA";
         effectUrls[9] = "https://gnuiyadnkqh5iknil5hjerjlfopixffzuocfnhrxi7vewjjrh32q.arweave.net/M2iMAG1UD9QpqF9OkkUrK56LlLmjhFaeN0fqSyUxPvU";
+        effectUrls[10] = "https://arweave.net/Re2AJZkxWB-Y3wgNOqpwKJDvc_BBM869GiGlBlCsbZI";
+        effectUrls[11] = "https://arweave.net/Ajas3JTP0OL727D7uBMGX_6pJsOnINV9BEewkufnQDo";
     }
     
     function getEffectUrl(uint8 id) external view returns (string memory) {
-        require(id < 10, "Invalid effect ID");
+        require(id < 12, "Invalid effect ID");
         return effectUrls[id];
     }
     
     function getEffectName(uint8 id) external view returns (string memory) {
-        require(id < 10, "Invalid effect ID");
+        require(id < 12, "Invalid effect ID");
         return effectNames[id];
     }
     
     function setEffectUrl(uint8 id, string calldata url) external onlyOwner {
-        require(id < 10, "Invalid effect ID");
+        require(id < 12, "Invalid effect ID");
         effectUrls[id] = url;
     }
     
@@ -67,7 +71,7 @@ contract ArweaveEffectBank {
     function setMultipleUrls(uint8[] calldata ids, string[] calldata urls) external onlyOwner {
         require(ids.length == urls.length, "Arrays length mismatch");
         for (uint i = 0; i < ids.length; i++) {
-            require(ids[i] < 10, "Invalid effect ID");
+            require(ids[i] < 12, "Invalid effect ID");
             effectUrls[ids[i]] = urls[i];
         }
     }
