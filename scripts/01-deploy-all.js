@@ -120,7 +120,7 @@ async function main() {
 
     // Verify composer
     console.log("\n🧪 Composer deployed successfully.");
-    console.log("  ⚠️  Note: composeSVG will fail until Arweave URLs are set in step 02");
+    console.log("  ✅ Arweave URLs are already initialized in BackgroundBank and EffectBank contracts");
 
     // Save deployment log
     const logFilename = `deployment-${hre.network.name}-${Date.now()}.json`;
@@ -139,9 +139,9 @@ async function main() {
     console.log("  Effect Bank:     ", effectBank.address);
     console.log("  Composer:        ", composer.address);
     console.log("\n⚠️  Next Steps:");
-    console.log("  1. Run script 02-update-urls.js to set actual Arweave URLs");
-    console.log("  2. Run script 03-test-composition.js to verify");
-    console.log("  3. Deploy NFT contract using this composer");
+    console.log("  1. Run script 03-test-composition.js to verify SVG generation");
+    console.log("  2. Deploy NFT contract using this composer");
+    console.log("  3. (Optional) Run script 02-update-urls.js if you need to change Arweave URLs");
 
   } catch (error) {
     console.error("\n❌ Deployment failed:", error);
