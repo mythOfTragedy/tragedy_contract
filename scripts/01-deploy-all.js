@@ -110,8 +110,8 @@ async function main() {
     const ArweaveTragedyComposer = await ethers.getContractFactory("ArweaveTragedyComposer");
     const composer = await ArweaveTragedyComposer.deploy(
       monsterBank.address,
-      itemBank.address,
       backgroundBank.address,
+      itemBank.address,
       effectBank.address
     );
     await composer.deployed();
