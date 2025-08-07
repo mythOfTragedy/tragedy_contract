@@ -54,8 +54,8 @@ async function verifyDeployment(deployment) {
         
         for (const tokenId of testTokens) {
             try {
-                const attr = await metadata.getAttributes(tokenId);
-                log(`Token #${tokenId}: Species=${attr.species}, Item=${attr.item}, BG=${attr.background}, Effect=${attr.effect}`, 'success');
+                const attr = await metadata.decodeTokenId(tokenId);
+                log(`Token #${tokenId}: Species=${attr[0]}, Item=${attr[2]}, BG=${attr[1]}, Effect=${attr[3]}`, 'success');
                 results.push({ test: `Token #${tokenId} metadata`, passed: true });
             } catch (error) {
                 log(`Token #${tokenId} metadata generation FAILED: ${error.message}`, 'error');
@@ -75,12 +75,12 @@ async function verifyDeployment(deployment) {
             ];
             
             for (const legendary of legendaries) {
-                const attr = await metadata.getAttributes(legendary.id);
+                const attr = await metadata.decodeTokenId(legendary.id);
                 const matches = 
-                    attr.species === legendary.expected.species &&
-                    attr.item === legendary.expected.item &&
-                    attr.background === legendary.expected.background &&
-                    attr.effect === legendary.expected.effect;
+                    attr[0] === legendary.expected.species &&
+                    attr[2] === legendary.expected.item &&
+                    attr[1] === legendary.expected.background &&
+                    attr[3] === legendary.expected.effect;
                 
                 if (matches) {
                     log(`${legendary.name} (#${legendary.id}) attributes correct`, 'success');
@@ -88,7 +88,7 @@ async function verifyDeployment(deployment) {
                 } else {
                     log(`${legendary.name} (#${legendary.id}) attributes INCORRECT`, 'error');
                     log(`  Expected: S=${legendary.expected.species}, I=${legendary.expected.item}, B=${legendary.expected.background}, E=${legendary.expected.effect}`, 'error');
-                    log(`  Actual: S=${attr.species}, I=${attr.item}, B=${attr.background}, E=${attr.effect}`, 'error');
+                    log(`  Actual: S=${attr[0]}, I=${attr[2]}, B=${attr[1]}, E=${attr[3]}`, 'error');
                     results.push({ test: `${legendary.name} attributes`, passed: false });
                     allPassed = false;
                 }

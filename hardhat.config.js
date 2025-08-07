@@ -18,7 +18,14 @@ module.exports = {
       chainId: 31337
     },
     bonsoleil: {
-      url: "https://dev2.bon-soleil.com/rpc",
+      url: process.env.RPC_URL || "https://dev2.bon-soleil.com/rpc",
+      chainId: 21201,
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      gasPrice: 20000000000,
+      gas: 6000000
+    },
+    bonsoleil_testnet: {
+      url: process.env.RPC_URL || "https://dev2.bon-soleil.com/rpc",
       chainId: 21201,
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
       gasPrice: 20000000000,

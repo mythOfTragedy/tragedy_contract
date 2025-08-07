@@ -101,13 +101,27 @@ PRIVATE_KEY=your_private_key_here
 
 詳細なデプロイ手順については [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) を参照してください。
 
-### 3.1 クイックスタート
+### 3.1 環境設定
 ```bash
-# コンパイル
-npx hardhat compile
+# .env.exampleをコピーして.envを作成
+cp .env.example .env
 
-# デプロイ
-npx hardhat run scripts/deploy-clean.js --network bonsoleil
+# .envを編集して秘密鍵とRPC URLを設定
+# PRIVATE_KEY=your_private_key_here
+# RPC_URL=https://dev2.bon-soleil.com/rpc
+```
+
+### 3.2 クイックデプロイ
+```bash
+# 自動デプロイ（.envのRPC_URLから自動的にネットワークを検出）
+npm run deploy
+
+# または特定のネットワークを指定
+npm run deploy:testnet    # Bon-Soleilテストネット
+npm run deploy:production # メインネット
+
+# デプロイと検証を同時に実行
+./scripts/deploy/deploy.sh --verify
 ```
 
 ### 3.3 Arweave URLの更新

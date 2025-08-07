@@ -119,7 +119,8 @@ async function main() {
         
         const metadata = await deployContract(
             "TragedyMetadata",
-            composer.address
+            composer.address,
+            legendaryBank.address
         );
         deployment.contracts.metadata = metadata.address;
         

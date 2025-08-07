@@ -2,27 +2,27 @@
 
 ## 最新デプロイメント情報 / Latest Deployment
 
-**Date**: 2025-08-07 16:37:34 UTC  
+**Date**: 2025-08-07 22:50:50 UTC  
 **Network**: Bon-Soleil Testnet  
-**Method**: `deploy-clean.js`
+**Method**: `npm run deploy:testnet` (新統一システム)
 
 ## デプロイ済みコントラクト / Deployed Contracts
 
 | Contract | Address | Purpose |
 |----------|---------|---------|
-| **BankedNFT** | `0xB4d1326e49fb178c16C045026500472D7DE51D42` | メインNFTコントラクト |
-| **TragedyMetadata** | `0x3eEb602E0Ed94678e8C575647394286cB1B7d023` | メタデータ生成 |
-| **ArweaveTragedyComposer** | `0xF8a03Eb8f24374575f6d55D581DaE9F914866E7d` | SVG合成エンジン |
-| **LegendaryBank** | `0x98649Db0170d6E757aF9aFd9E63CCdaaa9E241de` | レジェンダリー管理 |
+| **BankedNFT** | `0x60b5C5f23aab8A6A278209DDD9e5FB5a061e127d` | メインNFTコントラクト |
+| **TragedyMetadata** | `0x3aC2D1E9Ae491a87250A67e59358FF27fE4B3C68` | メタデータ生成 |
+| **ArweaveTragedyComposer** | `0x1Ef1C96641232671B4eD60efF7Cb58315B7d4BE8` | SVG合成エンジン |
+| **LegendaryBank** | `0x4D642Cb0084437A7B989604724280db6552c3276` | レジェンダリー管理 |
 
 ### Bank Contracts
 
 | Bank Type | Main Contract | Sub-Contract 1 | Sub-Contract 2 |
 |-----------|---------------|----------------|----------------|
-| **Monster** | `0xEa525df7A7983c79F9Ff87Bc45Bc4ace5d4b754B` | `0x57C13Ad558d75AE16C0EAaeB6f0dA07f7Ac2108b` | `0xe235907cDbA611506A8dc01681Ee34760B1a0C17` |
-| **Item** | `0x4Ff085Ed36601d412A75030f47c4ffD807851c44` | `0x22F82f81E3845E1c375C32c304407D3E68FD3C2A` | `0xB44c571246a8DF8C5142A2DBd5f63b628a1062e6` |
-| **Background** | `0x7C52655d2e5FbDdB2cB38ad10D55e3c938543587` | - | - |
-| **Effect** | `0x0566b56Df99bF6577484e1Bd721348213Acf51eb` | - | - |
+| **Monster** | `0x19F418ACAF5f3d763c108e1DC75ECC0667185917` | `0x57825F75d5Bbd9579aD5BaC196D915bBaA63a0A3` | `0x191eD4001eC26d759D0B1eB05b7a36575E63A056` |
+| **Item** | `0x25e712dee346ef940d2cC8241C4C14dd39d38D8c` | `0x6B163aa64A5e8b86C498E420A503bB2a73D1fFBF` | `0xf525AC480577e75F51612301A6d823d20b2d612a` |
+| **Background** | `0x39FD0A0A12082F2048E70cd3d696b657b8a0A724` | - | - |
+| **Effect** | `0xcEBB3c91426FE11aC942E845A57dbFB43850B284` | - | - |
 
 ## 重要な設定 / Key Configuration
 
@@ -48,12 +48,16 @@ npx hardhat run scripts/deploy-clean.js --network bonsoleil
 ## ファイル構成 / File Structure
 
 - **メインデプロイ情報**: `viewer/deployment.json`
-- **詳細デプロイログ**: `deployments/clean-bonsoleil-1754584655554.json`
+- **詳細デプロイログ**: `deployments/bonsoleil-2025-08-07T22-50-52.json`
 - **デプロイガイド**: `docs/DEPLOYMENT.md`
 
 ## 最近の変更 / Recent Changes
 
-1. **2025-08-07**: Burning効果のArweave URLを更新
+1. **2025-08-07 22:50**: 新統一デプロイシステムで再デプロイ
+   - すべてのコントラクトアドレスが更新
+   - 自動検証が成功
+
+2. **2025-08-07 16:37**: Burning効果のArweave URLを更新
    - 旧: `https://4xilt2jbun6zo5xus37tjclqofafrntncwxecnnltxclbxtwmuya.arweave.net/...`
    - 新: `https://arweave.net/pQ8Vd7LVqQIBKSbAOoq26rqKKggxF-qAsSyZfwU_ZgA`
 
@@ -63,9 +67,11 @@ npx hardhat run scripts/deploy-clean.js --network bonsoleil
 
 ## 注意事項 / Notes
 
-- `deploy-production.js`と`01-deploy-all.js`も存在するが、`deploy-clean.js`が最新かつ推奨
-- 複数のデプロイ履歴ファイルが存在する場合、タイムスタンプで最新を確認
+- **新システム**: `npm run deploy:testnet`が推奨デプロイ方法
+- **旧システム**: `legacy:`プレフィックス付きコマンドで利用可能
+- 複数のデプロイ履歴ファイルが存在する場合、`deployments/current.json`が最新
 - フロントエンド（viewer）は自動的に`viewer/deployment.json`を参照
+- 移行ガイド: `MIGRATION_GUIDE.md`を参照
 
 ---
 *Last Updated: 2025-08-07*

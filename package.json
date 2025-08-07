@@ -6,8 +6,10 @@
   "scripts": {
     "test": "hardhat test",
     "compile": "hardhat compile",
+    "deploy": "scripts/deploy/deploy.sh",
     "deploy:local": "hardhat run scripts/deploy/main.js --network hardhat",
     "deploy:testnet": "hardhat run scripts/deploy/main.js --network bonsoleil",
+    "deploy:bonsoleil": "hardhat run scripts/deploy/main.js --network bonsoleil_testnet",
     "deploy:production": "hardhat run scripts/deploy/main.js --network mainnet",
     "verify": "hardhat run scripts/deploy/verify.js --network",
     "verify:testnet": "hardhat run scripts/deploy/verify.js --network bonsoleil",

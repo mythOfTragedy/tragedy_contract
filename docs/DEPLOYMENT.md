@@ -35,26 +35,35 @@ Using the new unified deployment system:
 # Compile contracts
 npx hardhat compile
 
-# Deploy to local network
-npm run deploy:local
+# Deploy using smart shell script (detects network from .env)
+npm run deploy
 
-# Deploy to testnet (Bon-Soleil)
-npm run deploy:testnet
+# Or deploy with specific options
+./scripts/deploy/deploy.sh                    # Uses .env RPC_URL
+./scripts/deploy/deploy.sh bonsoleil          # Force specific network
+./scripts/deploy/deploy.sh bonsoleil --verify # Deploy and verify
 
-# Deploy to mainnet
-npm run deploy:production
+# Direct npm commands
+npm run deploy:local      # Local Hardhat network
+npm run deploy:testnet    # Bon-Soleil testnet
+npm run deploy:bonsoleil  # Bon-Soleil testnet (alias)
+npm run deploy:production # Mainnet
 
 # Verify deployment
 npm run verify:testnet
 ```
 
+The deployment script automatically:
+- Detects network from .env RPC_URL
+- Checks prerequisites
+- Compiles contracts (unless --skip-compile)
+- Runs deployment
+- Optionally verifies (with --verify flag)
+
 Legacy method (still available):
 ```bash
-# Using deploy-clean.js directly
-npx hardhat run scripts/deploy-clean.js --network bonsoleil
-
-# Or use the automated shell script
-./deploy.sh bonsoleil --with-nft
+# Using old scripts with legacy: prefix
+npm run legacy:deploy-workflow
 ```
 
 ### 2. Deployment Output
