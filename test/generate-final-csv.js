@@ -16,7 +16,7 @@ async function main() {
     const backgroundNames = ["Bloodmoon", "Abyss", "Decay", "Corruption", "Venom", "Void", "Inferno", "Frost", "Ragnarok", "Shadow"];
     
     // Original effect order (before remapping) - MUST MATCH ON-CHAIN BANK CONTRACTS!
-    const effectNames = ["Seizure", "Mindblast", "Confusion", "Meteor", "Bats", "Poisoning", "Lightning", "Blizzard", "Burning", "Brainwash"];
+    const effectNames = ["Seizure", "Mind Blast", "Confusion", "Meteor", "Bats", "Poisoning", "Lightning", "Blizzard", "Burning", "Brain Wash"];
 
     // Function to decode token ID using LCG
     function decodeTokenIdLCG(tokenId) {
@@ -32,15 +32,12 @@ async function main() {
 
     // Function to get display effect (with legendary transformations)
     function getDisplayEffect(species, item, background, effect) {
-        // Legendary combination 1: Skeleton + Scythe + Shadow + effect 3 → Blackout
-        if (species === 9 && item === 6 && background === 9 && effect === 3) {
+        // Legendary combination 1: Skeleton + Scythe + Shadow + effect 1 (Mind Blast) → Blackout
+        if (species === 9 && item === 6 && background === 9 && effect === 1) {
             return { id: 10, name: "Blackout" };
         }
         
-        // Legendary combination 2: Frankenstein + Poison + Venom + effect 3 → Matrix
-        if (species === 2 && item === 3 && background === 4 && effect === 3) {
-            return { id: 11, name: "Matrix" };
-        }
+        // Note: Matrix transformation is not needed in frontend
         
         return { id: effect, name: effectNames[effect] };
     }
@@ -57,20 +54,20 @@ async function main() {
         }
         
         // Legendary Effect Synergies
-        if (monster === "Skeleton" && item === "Scythe" && background === "Shadow" && effect === "Blackout") {
-            return { found: true, title: "Soul Harvester", type: "legendary", description: "The ultimate death incarnate. This skeletal reaper cuts through dimensions, harvesting souls across all realities in absolute darkness." };
+        if (monster === "Skeleton" && item === "Scythe" && background === "Shadow" && effect === "Mind Blast") {
+            return { found: true, title: "Soul Harvester", type: "quad", description: "The ultimate reaper of souls. Its psychic scythe cuts through both flesh and consciousness." };
         }
         
-        if (monster === "Frankenstein" && item === "Poison" && background === "Venom" && effect === "Matrix") {
-            return { found: true, title: "Toxic Abomination", type: "legendary", description: "A monstrous fusion of flesh and digital poison. Its body constantly glitches between physical and virtual toxicity." };
+        if (monster === "Frankenstein" && item === "Poison" && background === "Venom" && effect === "Seizure") {
+            return { found: true, title: "Toxic Abomination", type: "quad", description: "An undying monster saturated with poison. Its body convulses eternally from the toxins it cannot expel." };
         }
         
         // Dual Synergies - Equipment transformations
-        if (monster === "Werewolf" && item === "Crown") {
+        if (monster === "Werewolf" && item === "Head") {
             return { found: true, title: "The Alpha's Trophy", type: "dual", description: "What appears to be a simple crown is revealed as the severed head of the previous pack leader." };
         }
         
-        if (monster === "Frankenstein" && item === "Shoulder") {
+        if (monster === "Frankenstein" && item === "Arm") {
             return { found: true, title: "The Collector", type: "dual", description: "The shoulder armor is actually a collection of harvested arms, still twitching with unnatural life." };
         }
         
@@ -249,8 +246,8 @@ async function main() {
         else if (effect === "Blizzard") return "as frozen winds tear reality.";
         else if (effect === "Lightning") return "beneath electric fury.";
         else if (effect === "Meteor") return "while heavens rain destruction.";
-        else if (effect === "Mindblast") return "its screams shatter sanity.";
-        else if (effect === "Brainwash") return "enslaving minds with madness.";
+        else if (effect === "Mind Blast") return "its screams shatter sanity.";
+        else if (effect === "Brain Wash") return "enslaving minds with madness.";
         else if (effect === "Confusion") return "spreading fractured chaos.";
         else if (effect === "Seizure") return "causing reality to convulse.";
         else if (effect === "Poisoning") return "leaving toxic death behind.";
@@ -313,8 +310,34 @@ async function main() {
         const displayEffect = getDisplayEffect(species, item, background, effect);
         const effectName = displayEffect.name;
         
-        // Check synergies
-        const synergy = checkSynergies(monsterName, itemName, backgroundName, effectName);
+        
+        // Check synergies - for items with synergy forms, check the transformed version
+        let synergy;
+        let transformedItemName = itemName;
+        
+        if (itemName === "Amulet") {
+            // For Amulet, check if there's a synergy with "Head"
+            transformedItemName = "Head";
+            synergy = checkSynergies(monsterName, transformedItemName, backgroundName, effectName);
+            if (!synergy.found) {
+                // If no synergy with Head, reset to original
+                transformedItemName = itemName;
+                synergy = checkSynergies(monsterName, itemName, backgroundName, effectName);
+            }
+        } else if (itemName === "Shoulder") {
+            // For Shoulder, check if there's a synergy with "Arm"
+            transformedItemName = "Arm";
+            synergy = checkSynergies(monsterName, transformedItemName, backgroundName, effectName);
+            if (!synergy.found) {
+                // If no synergy with Arm, reset to original
+                transformedItemName = itemName;
+                synergy = checkSynergies(monsterName, itemName, backgroundName, effectName);
+            }
+        } else {
+            // For other items, check normally
+            synergy = checkSynergies(monsterName, itemName, backgroundName, effectName);
+        }
+        
         if (synergy.found) synergyCount++;
         
         // Generate name and story
@@ -330,10 +353,12 @@ async function main() {
         if (rarity === "Mythic") mythicCount++;
         if (rarity === "Legendary") legendaryCount++;
         
-        // Equipment name swap for synergies
+        // Equipment name swap for synergies (based on synergyForm in attributes.json)
+        // Only transform if a synergy was found with the transformed name
         let displayItemName = itemName;
-        if (synergy.found && synergy.title === "The Alpha's Trophy") displayItemName = "Head";
-        else if (synergy.found && synergy.title === "The Collector") displayItemName = "Arm";
+        if (synergy.found && transformedItemName !== itemName) {
+            displayItemName = transformedItemName;
+        }
         
         // Add row
         csvRows.push(
@@ -361,8 +386,8 @@ async function main() {
     
     // Show special tokens
     console.log("\n🌟 Special Legendary Tokens:");
-    console.log("  Token #1687: Soul Harvester (Skeleton + Scythe + Shadow + Blackout)");
-    console.log("  Token #2097: Toxic Abomination (Frankenstein + Poison + Venom + Matrix)");
+    console.log("  Token #1687: Soul Harvester (Skeleton + Scythe + Shadow + Mind Blast)");
+    console.log("  Token #2097: Toxic Abomination (Frankenstein + Poison + Venom + Seizure)");
     
     // Show legendary IDs
     console.log("\n🏆 Some Legendary Token IDs:");
