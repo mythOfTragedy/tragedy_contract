@@ -99,14 +99,15 @@ PRIVATE_KEY=your_private_key_here
 
 ## Step 3: デプロイ
 
-### 3.1 コンパイル
-```bash
-npx hardhat compile
-```
+詳細なデプロイ手順については [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) を参照してください。
 
-### 3.2 デプロイスクリプトの実行
+### 3.1 クイックスタート
 ```bash
-npx hardhat run scripts/01-deploy-all.js --network bonsoleil
+# コンパイル
+npx hardhat compile
+
+# デプロイ
+npx hardhat run scripts/deploy-clean.js --network bonsoleil
 ```
 
 ### 3.3 Arweave URLの更新

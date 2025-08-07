@@ -1,0 +1,66 @@
+{
+  "networks": {
+    "hardhat": {
+      "description": "Local development network",
+      "confirmations": 1
+    },
+    "bonsoleil": {
+      "description": "Bon-Soleil testnet",
+      "confirmations": 2,
+      "explorerUrl": "https://explorer.bonsoleil.io"
+    },
+    "mainnet": {
+      "description": "Ethereum mainnet",
+      "confirmations": 5,
+      "explorerUrl": "https://etherscan.io"
+    }
+  },
+  "contracts": {
+    "deploymentOrder": [
+      "monsterBanks",
+      "itemBanks", 
+      "backgroundBank",
+      "effectBank",
+      "composer",
+      "legendaryBank",
+      "metadata",
+      "nft"
+    ],
+    "nft": {
+      "name": "Tragedy NFT",
+      "symbol": "TRAGEDY",
+      "maxSupply": 10000,
+      "mintFee": "0.01",
+      "royaltyRate": 250
+    },
+    "seed": {
+      "shuffleSeed": 4567,
+      "legendaryTokens": {
+        "soulHarvester": 1687,
+        "toxicAbomination": 2097
+      }
+    }
+  },
+  "deployment": {
+    "gasSettings": {
+      "auto": true,
+      "maxPriorityFeePerGas": null,
+      "maxFeePerGas": null
+    },
+    "verification": {
+      "enabled": true,
+      "delay": 30000
+    }
+  },
+  "output": {
+    "deploymentDir": "./deployments",
+    "viewerConfig": "./viewer/deployment.json",
+    "saveHistory": true,
+    "timestampFormat": "YYYY-MM-DD-HHmmss"
+  },
+  "testing": {
+    "runPostDeploymentTests": true,
+    "testTokenIds": [1, 10, 100, 1687, 2097],
+    "validateLegendaries": true
+  }
+}

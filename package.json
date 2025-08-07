@@ -6,12 +6,17 @@
   "scripts": {
     "test": "hardhat test",
     "compile": "hardhat compile",
-    "deploy": "hardhat run scripts/deploy-production.js --network bonsoleil",
-    "deploy-workflow": "hardhat run scripts/01-deploy-all.js --network bonsoleil",
-    "update-urls": "hardhat run scripts/02-update-urls.js --network bonsoleil",
-    "test-composition": "hardhat run scripts/03-test-composition.js --network bonsoleil",
-    "deploy-nft": "hardhat run scripts/04-deploy-nft.js --network bonsoleil",
-    "test-minting": "hardhat run scripts/05-test-minting.js --network bonsoleil"
+    "deploy:local": "hardhat run scripts/deploy/main.js --network hardhat",
+    "deploy:testnet": "hardhat run scripts/deploy/main.js --network bonsoleil",
+    "deploy:production": "hardhat run scripts/deploy/main.js --network mainnet",
+    "verify": "hardhat run scripts/deploy/verify.js --network",
+    "verify:testnet": "hardhat run scripts/deploy/verify.js --network bonsoleil",
+    "legacy:deploy": "hardhat run scripts/deploy-production.js --network bonsoleil",
+    "legacy:deploy-workflow": "hardhat run scripts/01-deploy-all.js --network bonsoleil",
+    "legacy:update-urls": "hardhat run scripts/02-update-urls.js --network bonsoleil",
+    "legacy:test-composition": "hardhat run scripts/03-test-composition.js --network bonsoleil",
+    "legacy:deploy-nft": "hardhat run scripts/04-deploy-nft.js --network bonsoleil",
+    "legacy:test-minting": "hardhat run scripts/05-test-minting.js --network bonsoleil"
   },
   "keywords": [
     "nft",
