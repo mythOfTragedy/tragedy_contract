@@ -70,6 +70,7 @@
             padding: 20px;
             border-radius: 10px;
             margin-top: 20px;
+            position: relative;
         }
         
         .composed-svg {
@@ -134,9 +135,37 @@
             border-radius: 5px;
         }
         
+        .result-container {
+            position: relative;
+        }
+        
         .result-container h2 {
             color: #ff6b6b;
             margin-bottom: 20px;
+        }
+        
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: transparent;
+            color: #888;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+            line-height: 1;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+        }
+        
+        .close-button:hover {
+            color: #ff6b6b;
+        }
+        
+        .result-container.hidden {
+            display: none;
         }
         
         #result {
@@ -250,7 +279,8 @@
         <button onclick="composeSVG()">Compose SVG</button>
     </div>
     
-    <div class="result-container">
+    <div class="result-container hidden" id="resultContainer">
+        <button class="close-button" onclick="hideResult()" title="Close">×</button>
         <h2>Composed Result</h2>
         <div id="result"></div>
     </div>
@@ -340,6 +370,7 @@
                 
                 // Show what we're doing
                 let html = '<div class="result-section">';
+                html += '<button class="close-button" onclick="hideResult()" title="Close">×</button>';
                 html += '<h2>Composition Result</h2>';
                 html += '<div class="info">Parameters: species=' + species + ', background=' + background + ', item=' + item + ', effect=' + effect + '</div>';
                 html += '<div class="info">Using: ' + composerChoice + ' composer (' + composerAddress + ')</div>';
@@ -373,10 +404,20 @@
                 
                 resultDiv.innerHTML = html;
                 
+                // Show the result container
+                document.getElementById('resultContainer').classList.remove('hidden');
+                
             } catch (error) {
                 console.error(error);
                 resultDiv.innerHTML = '<div class="error">Error: ' + error.message + '</div>';
+                
+                // Show the result container even on error
+                document.getElementById('resultContainer').classList.remove('hidden');
             }
+        }
+        
+        function hideResult() {
+            document.getElementById('resultContainer').classList.add('hidden');
         }
         
         // Initialize

@@ -569,6 +569,26 @@
         max-width: 450px;
         max-height: 450px;
       }
+      
+      #composer-result .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: transparent;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: #888;
+        z-index: 10;
+        width: 30px;
+        height: 30px;
+        line-height: 1;
+        transition: color 0.3s;
+      }
+      
+      #composer-result .close-btn:hover {
+        color: #ff6b6b;
+      }
     </style>
   </head>
   <body>
@@ -945,6 +965,7 @@
           </button>
         </div>
         <div id="composer-result">
+          <button class="close-btn" onclick="document.getElementById('composer-result').style.display='none'" title="Close">×</button>
           <div class="admin-section">
             <h3>Composition Result</h3>
             <div class="svg-display">
@@ -2669,13 +2690,17 @@
         const effect = document.getElementById("composer-effect").value;
 
         const resultDiv = document.getElementById("composer-result");
-        resultDiv.innerHTML = '<div class="status">Composing...</div>';
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = `
+          <button class="close-btn" onclick="document.getElementById('composer-result').style.display='none'" title="Close">×</button>
+          <div class="status">Composing...</div>`;
 
         try {
           // Use the fixed composer
           if (!DEPLOYMENT) {
-            resultDiv.innerHTML =
-              '<div class="error">Deployment not loaded</div>';
+            resultDiv.innerHTML = `
+              <button class="close-btn" onclick="document.getElementById('composer-result').style.display='none'" title="Close">×</button>
+              <div class="error">Deployment not loaded</div>`;
             return;
           }
           const composerAddress = DEPLOYMENT.contracts.composer;
@@ -2695,7 +2720,11 @@
             effect
           );
 
+          // Make sure the result div is visible
+          resultDiv.style.display = 'block';
+          
           resultDiv.innerHTML = `
+                    <button class="close-btn" onclick="document.getElementById('composer-result').style.display='none'" title="Close">×</button>
                     <div class="admin-section">
                         <h3>Composition Result</h3>
                         <div class="svg-display">
@@ -2707,7 +2736,10 @@
                     </div>
                 `;
         } catch (error) {
-          resultDiv.innerHTML = `<div class="error-message">Error: ${error.message}</div>`;
+          resultDiv.style.display = 'block';
+          resultDiv.innerHTML = `
+            <button class="close-btn" onclick="document.getElementById('composer-result').style.display='none'" title="Close">×</button>
+            <div class="error-message">Error: ${error.message}</div>`;
         }
       }
 
