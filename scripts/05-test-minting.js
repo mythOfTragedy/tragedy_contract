@@ -32,19 +32,23 @@ async function main() {
 
   try {
     // Get contract instance
-    const nft = await ethers.getContractAt("TragedyMythNFT", deployment.contracts.nft);
+    const nft = await ethers.getContractAt("BankedNFT", deployment.contracts.nft);
     const metadataContract = await ethers.getContractAt("TragedyMetadata", deployment.contracts.metadata);
 
     console.log("\n🎨 Testing Single Mint...");
     
+    // Get mint fee
+    const mintFee = await nft.mintFee();
+    console.log("  💰 Mint fee:", ethers.utils.formatEther(mintFee), "ETH");
+    
     // Mint a single NFT
-    const tx = await nft.mint(1, 4, 1, 1); // Goblin + Venom + Sword + Mindblast
+    const tx = await nft.mint({ value: mintFee });
     console.log("  📡 Transaction:", tx.hash);
     const receipt = await tx.wait();
     console.log("  ✅ Minted! Gas used:", receipt.gasUsed.toString());
     
     // Extract tokenId from event
-    const mintEvent = receipt.events.find(e => e.event === 'TragedyMinted');
+    const mintEvent = receipt.events.find(e => e.event === 'NFTMinted');
     const tokenId = mintEvent.args.tokenId;
     console.log("  🏷️ Token ID:", tokenId.toString());
 
@@ -67,25 +71,19 @@ async function main() {
       console.log(`    - ${attr.trait_type}: ${attr.value}`);
     });
 
-    // Test batch minting
-    console.log("\n🎨 Testing Batch Mint...");
-    const species = [0, 4, 6, 9]; // Werewolf, Dragon, Vampire, Skeleton
-    const backgrounds = [0, 7, 1, 9]; // Bloodmoon, Frost, Abyss, Shadow
-    const items = [0, 3, 9, 6]; // Crown, Poison, Amulet, Scythe
-    const effects = [0, 6, 8, 4]; // Seizure, Lightning, Burning, Bats
-    
-    const batchTx = await nft.mintBatch(species, backgrounds, items, effects);
-    console.log("  📡 Transaction:", batchTx.hash);
-    const batchReceipt = await batchTx.wait();
-    console.log("  ✅ Batch minted! Gas used:", batchReceipt.gasUsed.toString());
-    
-    // Count minted tokens
-    const mintEvents = batchReceipt.events.filter(e => e.event === 'TragedyMinted');
-    console.log("  🏷️ Tokens minted:", mintEvents.length);
+    // Test multiple mints
+    console.log("\n🎨 Testing Multiple Mints...");
+    const numMints = 3;
+    for (let i = 0; i < numMints; i++) {
+      const mintTx = await nft.mint({ value: mintFee });
+      const mintReceipt = await mintTx.wait();
+      const event = mintReceipt.events.find(e => e.event === 'NFTMinted');
+      console.log(`  ✅ Minted token ${event.args.tokenId}`);
+    }
     
     // Check total supply
-    const totalSupply = await nft.nextTokenId();
-    console.log("\n📊 Total NFTs minted:", totalSupply.sub(1).toString());
+    const totalSupply = await nft.totalSupply();
+    console.log("\n📊 Total NFTs minted:", totalSupply.toString());
 
     // Save sample metadata
     const sampleFile = `sample-metadata-${Date.now()}.json`;

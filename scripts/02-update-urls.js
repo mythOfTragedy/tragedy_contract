@@ -40,9 +40,25 @@ async function main() {
   console.log("  Updater:", deployer.address);
 
   // Read deployment file to get contract addresses
-  const deployment = require('../viewer/deployment.json');
-
-  console.log("📄 Using deployment from viewer/deployment.json");
+  let deployment;
+  try {
+    // Try to find the latest deployment file
+    const files = fs.readdirSync('.');
+    const deploymentFiles = files.filter(f => f.startsWith('deployment-') && f.endsWith('.json'));
+    if (deploymentFiles.length > 0) {
+      // Use the most recent deployment file
+      deploymentFiles.sort((a, b) => b.localeCompare(a));
+      deployment = JSON.parse(fs.readFileSync(deploymentFiles[0], 'utf8'));
+      console.log("📄 Using deployment from", deploymentFiles[0]);
+    } else {
+      deployment = require('../viewer/deployment.json');
+      console.log("📄 Using deployment from viewer/deployment.json");
+    }
+  } catch (e) {
+    deployment = require('../viewer/deployment.json');
+    console.log("📄 Using deployment from viewer/deployment.json");
+  }
+  
   console.log("🌐 Network:", deployment.network);
 
   try {

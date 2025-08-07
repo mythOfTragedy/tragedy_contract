@@ -28,24 +28,56 @@ async function main() {
     console.log("  ✅ Base64 deployed to:", base64.address);
     deploymentLog.contracts.base64 = base64.address;
 
-    // Step 2: Deploy Monster Bank
-    console.log("\n👾 Step 2/6: Deploying Monster Bank...");
+    // Step 2: Deploy Monster Banks
+    console.log("\n👾 Step 2/6: Deploying Monster Banks...");
+    
+    // Deploy MonsterBank1
+    const ArweaveMonsterBank1 = await ethers.getContractFactory("ArweaveMonsterBank1");
+    const monsterBank1 = await ArweaveMonsterBank1.deploy();
+    await monsterBank1.deployed();
+    console.log("  ✅ Monster Bank1 deployed to:", monsterBank1.address);
+    deploymentLog.contracts.monsterBank1 = monsterBank1.address;
+    
+    // Deploy MonsterBank2
+    const ArweaveMonsterBank2 = await ethers.getContractFactory("ArweaveMonsterBank2");
+    const monsterBank2 = await ArweaveMonsterBank2.deploy();
+    await monsterBank2.deployed();
+    console.log("  ✅ Monster Bank2 deployed to:", monsterBank2.address);
+    deploymentLog.contracts.monsterBank2 = monsterBank2.address;
+    
+    // Deploy main MonsterBank
     const ArweaveMonsterBank = await ethers.getContractFactory("ArweaveMonsterBank");
-    const monsterBank = await ArweaveMonsterBank.deploy();
+    const monsterBank = await ArweaveMonsterBank.deploy(monsterBank1.address, monsterBank2.address);
     await monsterBank.deployed();
-    console.log("  ✅ Monster Bank deployed to:", monsterBank.address);
+    console.log("  ✅ Monster Bank (main) deployed to:", monsterBank.address);
     deploymentLog.contracts.monsterBank = monsterBank.address;
 
     // Verify deployment
     const werewolfName = await monsterBank.getMonsterName(0);
     console.log("  🔍 Verification: Monster 0 =", werewolfName);
 
-    // Step 3: Deploy Item Bank
-    console.log("\n⚔️ Step 3/6: Deploying Item Bank...");
+    // Step 3: Deploy Item Banks
+    console.log("\n⚔️ Step 3/6: Deploying Item Banks...");
+    
+    // Deploy ItemBank1
+    const ArweaveItemBank1 = await ethers.getContractFactory("ArweaveItemBank1");
+    const itemBank1 = await ArweaveItemBank1.deploy();
+    await itemBank1.deployed();
+    console.log("  ✅ Item Bank1 deployed to:", itemBank1.address);
+    deploymentLog.contracts.itemBank1 = itemBank1.address;
+    
+    // Deploy ItemBank2
+    const ArweaveItemBank2 = await ethers.getContractFactory("ArweaveItemBank2");
+    const itemBank2 = await ArweaveItemBank2.deploy();
+    await itemBank2.deployed();
+    console.log("  ✅ Item Bank2 deployed to:", itemBank2.address);
+    deploymentLog.contracts.itemBank2 = itemBank2.address;
+    
+    // Deploy main ItemBank
     const ArweaveItemBank = await ethers.getContractFactory("ArweaveItemBank");
-    const itemBank = await ArweaveItemBank.deploy();
+    const itemBank = await ArweaveItemBank.deploy(itemBank1.address, itemBank2.address);
     await itemBank.deployed();
-    console.log("  ✅ Item Bank deployed to:", itemBank.address);
+    console.log("  ✅ Item Bank (main) deployed to:", itemBank.address);
     deploymentLog.contracts.itemBank = itemBank.address;
 
     const crownName = await itemBank.getItemName(0);
@@ -87,14 +119,8 @@ async function main() {
     deploymentLog.contracts.composer = composer.address;
 
     // Verify composer
-    console.log("\n🧪 Testing Composer...");
-    const testSvg = await composer.composeSVG(0, 0, 0, 0);
-    console.log("  📏 Generated SVG length:", testSvg.length, "characters");
-    console.log("  🎯 SVG starts with:", testSvg.substring(0, 100) + "...");
-
-    // Check filter params
-    const filter = await composer.filterParams(0);
-    console.log("  🎨 Bloodmoon filter: hue=" + filter.hueRotate + ", sat=" + filter.saturate + ", bright=" + filter.brightness);
+    console.log("\n🧪 Composer deployed successfully.");
+    console.log("  ⚠️  Note: composeSVG will fail until Arweave URLs are set in step 02");
 
     // Save deployment log
     const logFilename = `deployment-${hre.network.name}-${Date.now()}.json`;

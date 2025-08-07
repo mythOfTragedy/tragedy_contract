@@ -36,10 +36,22 @@ async function main() {
 
     // Step 2: Deploy NFT Contract
     console.log("\n🎨 Step 2/2: Deploying NFT Contract...");
-    const TragedyMythNFT = await ethers.getContractFactory("TragedyMythNFT");
-    const nft = await TragedyMythNFT.deploy(metadata.address);
+    const BankedNFT = await ethers.getContractFactory("BankedNFT");
+    const nft = await BankedNFT.deploy(
+      "Tragedy NFT: The Mythical Cursed-Nightmare", // name
+      "TRAGEDY",                                     // symbol
+      10000,                                         // maxSupply
+      ethers.utils.parseEther("0.01"),              // mintFee
+      250                                           // royaltyRate (2.5%)
+    );
     await nft.deployed();
     console.log("  ✅ NFT deployed to:", nft.address);
+    
+    // Set metadata bank
+    console.log("  📝 Setting metadata bank...");
+    const tx = await nft.setMetadataBank(metadata.address);
+    await tx.wait();
+    console.log("  ✅ Metadata bank set!");
 
     // Update deployment log
     deployment.contracts.metadata = metadata.address;

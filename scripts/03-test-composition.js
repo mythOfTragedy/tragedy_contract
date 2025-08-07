@@ -37,7 +37,7 @@ async function main() {
   try {
     // Get contract instances
     const composer = await ethers.getContractAt(
-      "ArweaveTragedyComposerV2",
+      "ArweaveTragedyComposer",
       deployment.contracts.composer
     );
     const monsterBank = await ethers.getContractAt(
