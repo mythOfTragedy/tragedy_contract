@@ -46,7 +46,7 @@ contract ArweaveEffectBank {
         effectUrls[5] = "https://ncab6vr4saipz2vkp2hliaczzrjgbwzgcjiwoxvxozw5aqbthz2a.arweave.net/aIAfVjyQEPzqqn6OtABZzFJg2yYSUWdet3Zt0EAzPnQ";
         effectUrls[6] = "https://3n4imdvf6rjisoxhohzn5crvup3d5bndm7g4dtc3klhzr2f4emba.arweave.net/23iGDqX0Uok653Hy3oo1o_Y-haNnzcHMW1LPmOi8IwI";
         effectUrls[7] = "https://ouhfrxzuptiwk6ri3huio3lyzumt56yrdwomosvuhreptaygeezq.arweave.net/dQ5Y3zR80WV6KNnoh214zRk--xEdnMdKtDxI-YMGITM";
-        effectUrls[8] = "https://4xilt2jbun6zo5xus37tjclqofafrntncwxecnnltxclbxtwmuya.arweave.net/5dC56SGjfZd29Jb_NIlwcUBYtm0VrkE1q53EsN52ZTA";
+        effectUrls[8] = "https://arweave.net/pQ8Vd7LVqQIBKSbAOoq26rqKKggxF-qAsSyZfwU_ZgA";
         effectUrls[9] = "https://gnuiyadnkqh5iknil5hjerjlfopixffzuocfnhrxi7vewjjrh32q.arweave.net/M2iMAG1UD9QpqF9OkkUrK56LlLmjhFaeN0fqSyUxPvU";
         effectUrls[10] = "https://arweave.net/Re2AJZkxWB-Y3wgNOqpwKJDvc_BBM869GiGlBlCsbZI";
         effectUrls[11] = "https://arweave.net/Ajas3JTP0OL727D7uBMGX_6pJsOnINV9BEewkufnQDo";
