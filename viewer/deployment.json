@@ -1,10 +1,10 @@
 {
   "network": "bonsoleil",
-  "timestamp": "2025-08-07T07:06:43.934Z",
+  "timestamp": "2025-08-07T07:09:21.148Z",
   "note": "Auto-updated by deployment script",
   "contracts": {
     "bankedNFT": "0x4E5bAFC300e384b46C942097Bf020DaA77EE3fa4",
-    "metadata": "0x2a83071F51C1bbB2F2873653897Ae64ac8C46Ec8",
+    "metadata": "0x4C42e58f31269fEc6beb2FAB43D39a8A024900b3",
     "composer": "0x2fdCAaEd0CF84359375a602F45b97c4B0a31aED9",
     "monsterBank": "0xA75F4b3A22d7C3361000e566CaAbaA1387D2D17C",
     "itemBank": "0x9b0DF4A7363c141033895Ce54058D56638726B45",

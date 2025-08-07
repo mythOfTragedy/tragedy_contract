@@ -38,6 +38,24 @@ contract TragedyMetadata {
         background = uint8((seed >> 8) % 10);
         item = uint8((seed >> 16) % 10);
         effect = uint8((seed >> 24) % 10);
+        
+        // Check for legendary effect transformations
+        effect = getDisplayEffect(species, item, background, effect);
+    }
+    
+    function getDisplayEffect(uint8 species, uint8 item, uint8 background, uint8 effect) internal pure returns (uint8) {
+        // Legendary combination 1: Skeleton + Scythe + Shadow + Mind Blast → Blackout
+        if (species == 9 && item == 6 && background == 9 && effect == 1) {
+            return 10; // Blackout effect
+        }
+        
+        // Legendary combination 2: Frankenstein + Poison + Venom + Seizure → Matrix
+        if (species == 2 && item == 3 && background == 4 && effect == 0) {
+            return 11; // Matrix effect
+        }
+        
+        // No transformation
+        return effect;
     }
     
     // IMetadataBank interface implementation
@@ -65,7 +83,16 @@ contract TragedyMetadata {
         string memory monsterName = IArweaveMonsterBank(address(composer.monsterBank())).getMonsterName(species);
         string memory backgroundName = IArweaveBackgroundBank(address(composer.backgroundBank())).getBackgroundName(background);
         string memory itemName = IArweaveItemBank(address(composer.itemBank())).getItemName(item);
+        // Use the original effect ID for getting the base effect name
+        uint8 originalEffect = uint8((uint256(keccak256(abi.encodePacked(tokenId))) >> 24) % 10);
         string memory effectName = IArweaveEffectBank(address(composer.effectBank())).getEffectName(effect);
+        
+        // For legendary combinations, use the special effect name
+        if (effect == 10 && originalEffect == 1 && species == 9 && item == 6 && background == 9) {
+            effectName = "Blackout";
+        } else if (effect == 11 && originalEffect == 0 && species == 2 && item == 3 && background == 4) {
+            effectName = "Matrix";
+        }
         
         // Check for synergies
         SynergyResult memory synergy = checkSynergies(monsterName, backgroundName, itemName, effectName);
@@ -154,6 +181,21 @@ contract TragedyMetadata {
             keccak256(bytes(background)) == keccak256(bytes("Bloodmoon")) &&
             keccak256(bytes(effect)) == keccak256(bytes("Bats"))) {
             return SynergyResult(true, "Crimson Lord", "Under the blood moon, the crimson ruler commands legions of bats. The ancient vampire lord in its truest form.", 3);
+        }
+        
+        // Check Legendary Effect Synergies
+        if (keccak256(bytes(monster)) == keccak256(bytes("Skeleton")) &&
+            keccak256(bytes(item)) == keccak256(bytes("Scythe")) &&
+            keccak256(bytes(background)) == keccak256(bytes("Shadow")) &&
+            keccak256(bytes(effect)) == keccak256(bytes("Blackout"))) {
+            return SynergyResult(true, "Soul Harvester", "The ultimate death incarnate. This skeletal reaper cuts through dimensions, harvesting souls across all realities in absolute darkness.", 3);
+        }
+        
+        if (keccak256(bytes(monster)) == keccak256(bytes("Frankenstein")) &&
+            keccak256(bytes(item)) == keccak256(bytes("Poison")) &&
+            keccak256(bytes(background)) == keccak256(bytes("Venom")) &&
+            keccak256(bytes(effect)) == keccak256(bytes("Matrix"))) {
+            return SynergyResult(true, "Toxic Abomination", "A monstrous fusion of flesh and digital poison. Its body constantly glitches between physical and virtual toxicity.", 3);
         }
         
         // Check important Dual Synergies (Equipment transformation synergies)
