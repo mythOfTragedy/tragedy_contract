@@ -29,8 +29,8 @@
 - **Wine** - ワイン
 - **Scythe** - 大鎌
 - **Magic Wand** - 魔法の杖
-- **Shoulder** - 肩鎧 (シナジー時：**Arm** - 腕)
-- **Amulet** - アミュレット (シナジー時**Head** - 頭部)
+- **Shoulder** - 肩鎧 (EPIC時：**Arm** 腕)
+- **Amulet** - アミュレット (EPIC時 **Head** 頭部)
 
 ### 3. Realm (領域/色彩) - 10種類
 - **Bloodmoon** - 血月（赤系）
@@ -45,8 +45,8 @@
 - **Shadow** - 影（グレー系）
 
 ### 4. Curse (呪いの属性) - 10種類
-- **Seizure** - 発作（穏やかな点滅） (レジェンダリ時：**Matrix** - 電脳)
-- **Mind Blast** - 精神波動（同心円状の波紋） (レジェンダリ時：**Blackout** - 暗転)
+- **Seizure** - 発作（穏やかな点滅） (ULTIMETE時：**Matrix** - 電脳)
+- **Mind Blast** - 精神波動（同心円状の波紋） (ULTIMETE時：**Blackout** - 暗転)
 - **Confusion** - 混乱（虹色グラデーション）
 - **Meteor** - 流星群（斜めに流れる星）
 - **Bats** - コウモリの群れ
@@ -72,21 +72,21 @@
 
 ## ストーリーシステム
 
-### 1. Dual Synergy (2要素の相性)
+### 1. Dual Synergy (2要素の相性:EPIC)
 
 #### Species + Equipment Combos (実装済み)
-- **Vampire + Wine** = "Blood Sommelier" (Legendary)
-- **Skeleton + Scythe** = "Death's Herald" (Legendary)
-- **Dragon + Crown** = "The Fallen Monarch" (Legendary)
-- **Demon + Torch** = "Infernal Lightkeeper" (Legendary)
-- **Werewolf + Head** = "The Alpha's Trophy" (Legendary)
-- **Frankenstein + Arm** = "The Collector" (Epic)
-- **Mummy + Magic Wand** = "Pharaoh's Awakening" (Epic)
-- **Goblin + Sword** = "Blade Master" (Epic)
-- **Succubus + Shield** = "Temptress Guardian" (Epic)
-- **Zombie + Poison** = "Patient Zero" (Epic)
+- **Vampire + Wine** = "Blood Sommelier" 
+- **Skeleton + Scythe** = "Death's Herald"
+- **Dragon + Crown** = "The Fallen Monarch"
+- **Demon + Torch** = "Infernal Lightkeeper"
+- **Werewolf + Head** = "The Alpha's Trophy"
+- **Frankenstein + Arm** = "The Collector"
+- **Mummy + Magic Wand** = "Pharaoh's Awakening"
+- **Goblin + Sword** = "Blade Master"
+- **Succubus + Shield** = "Temptress Guardian"
+- **Zombie + Poison** = "Patient Zero"
 
-#### Curse + Realm Synergies (提案)
+#### Curse + Realm Synergies
 完璧な相性を持つ組み合わせ：
 - **Burning + Inferno** = "Eternal Flame" (永遠の業火)
 - **Blizzard + Frost** = "Absolute Zero" (絶対零度)
@@ -101,7 +101,7 @@
 
 ### 2. Triple Synergy (3要素の相性)
 
-#### Perfect Trinity Combos (提案)
+#### Perfect Trinity Combos (TRINITY)
 特定の3要素が完璧に調和する組み合わせ：
 
 **炎の三位一体**
@@ -136,7 +136,7 @@
 
 ### 3. Quad Synergy (4要素の完璧な調和)
 
-#### Ultimate Combinations (提案)
+#### Ultimate Combinations (ULTIMATE)
 全4要素が完璧に調和する究極の組み合わせ（0.01%の確率）：
 
 1. **Dragon + Crown + Ragnarok + Meteor** = "Cosmic Sovereign"

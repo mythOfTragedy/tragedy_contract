@@ -294,8 +294,17 @@ async function main() {
             return "Legendary";
         }
         
-        if (synergyType === "quad" || synergyType === "legendary") {
-            return "Mythic";
+        if (synergyType === "quad") {
+            return "Ultimate";
+        }
+        
+        if (synergyType === "trinity") {
+            return "Trinity";
+        }
+        
+        // Dual synergy always gets Epic (DESIGN.md specification)
+        if (synergyType === "dual") {
+            return "Epic";
         }
         
         // Base rarity calculation
@@ -307,11 +316,6 @@ async function main() {
         else if (roll < 85) baseLevel = 2; // Rare 15%
         else if (roll < 95) baseLevel = 3; // Epic 10%
         else baseLevel = 4; // Legendary 5%
-        
-        // Dual synergy upgrades by 1 level
-        if (synergyType === "dual") {
-            baseLevel = Math.min(baseLevel + 1, 4);
-        }
         
         const rarityNames = ["Common", "Uncommon", "Rare", "Epic", "Legendary"];
         return rarityNames[baseLevel];

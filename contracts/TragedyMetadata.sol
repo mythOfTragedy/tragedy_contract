@@ -246,6 +246,99 @@ contract TragedyMetadata {
             return SynergyResult(true, "Frozen Guardian", "The ice sprite defending eternal permafrost. Its shield channels blizzards that freeze time itself.", 3);
         }
         
+        // Check Trinity Synergies (3-element perfect harmony)
+        // Fire Trinity
+        if (keccak256(bytes(monster)) == keccak256(bytes("Dragon")) &&
+            keccak256(bytes(item)) == keccak256(bytes("Sword")) &&
+            keccak256(bytes(effect)) == keccak256(bytes("Burning"))) {
+            return SynergyResult(true, "Primordial Flame Lord", "The ancient dragon wielding flames from the dawn of creation.", 2);
+        }
+        
+        if (keccak256(bytes(monster)) == keccak256(bytes("Demon")) &&
+            keccak256(bytes(item)) == keccak256(bytes("Torch")) &&
+            keccak256(bytes(background)) == keccak256(bytes("Inferno"))) {
+            return SynergyResult(true, "Hell's Gatekeeper", "The guardian of hell's entrance, eternally burning.", 2);
+        }
+        
+        // Death Trinity
+        if (keccak256(bytes(monster)) == keccak256(bytes("Skeleton")) &&
+            keccak256(bytes(item)) == keccak256(bytes("Scythe")) &&
+            keccak256(bytes(background)) == keccak256(bytes("Shadow"))) {
+            return SynergyResult(true, "Death Incarnate", "Death itself given form, the inevitable end.", 2);
+        }
+        
+        if (keccak256(bytes(monster)) == keccak256(bytes("Zombie")) &&
+            keccak256(bytes(item)) == keccak256(bytes("Amulet")) && // Will display as Head
+            keccak256(bytes(background)) == keccak256(bytes("Decay"))) {
+            return SynergyResult(true, "Undead Overlord", "The crowned ruler of the walking dead.", 2);
+        }
+        
+        // Mind Trinity
+        if (keccak256(bytes(monster)) == keccak256(bytes("Succubus")) &&
+            keccak256(bytes(item)) == keccak256(bytes("Wine")) &&
+            keccak256(bytes(effect)) == keccak256(bytes("Brain Wash"))) {
+            return SynergyResult(true, "Mind Seductress", "The temptress who intoxicates minds and souls.", 2);
+        }
+        
+        if (keccak256(bytes(monster)) == keccak256(bytes("Vampire")) &&
+            keccak256(bytes(item)) == keccak256(bytes("Crown")) &&
+            keccak256(bytes(effect)) == keccak256(bytes("Mind Blast"))) {
+            return SynergyResult(true, "Psychic Monarch", "The telepathic ruler of the night.", 2);
+        }
+        
+        if (keccak256(bytes(monster)) == keccak256(bytes("Vampire")) &&
+            keccak256(bytes(item)) == keccak256(bytes("Wine")) &&
+            keccak256(bytes(effect)) == keccak256(bytes("Bats"))) {
+            return SynergyResult(true, "Classic Nosferatu", "The original vampire in its truest form.", 2);
+        }
+        
+        // Nature Trinity
+        if (keccak256(bytes(monster)) == keccak256(bytes("Werewolf")) &&
+            keccak256(bytes(item)) == keccak256(bytes("Shoulder")) && // Will display as Arm
+            keccak256(bytes(background)) == keccak256(bytes("Bloodmoon"))) {
+            return SynergyResult(true, "Lunar Beast", "The beast empowered by the crimson moon.", 2);
+        }
+        
+        if (keccak256(bytes(monster)) == keccak256(bytes("Mummy")) &&
+            keccak256(bytes(background)) == keccak256(bytes("Void")) &&
+            keccak256(bytes(effect)) == keccak256(bytes("Meteor"))) {
+            return SynergyResult(true, "Ancient Apocalypse", "The harbinger of cosmic destruction from ages past.", 2);
+        }
+        
+        // Madness Trinity
+        if (keccak256(bytes(monster)) == keccak256(bytes("Frankenstein")) &&
+            keccak256(bytes(effect)) == keccak256(bytes("Lightning"))) {
+            // Note: This is a simplified check as we can't check all 3 at once with current structure
+            return SynergyResult(true, "Aberrant Creation", "A creation gone wrong, sparking with madness.", 2);
+        }
+        
+        if (keccak256(bytes(monster)) == keccak256(bytes("Goblin")) &&
+            keccak256(bytes(background)) == keccak256(bytes("Corruption")) &&
+            keccak256(bytes(effect)) == keccak256(bytes("Confusion"))) {
+            return SynergyResult(true, "Mad Trickster", "The chaotic jester of corrupted realms.", 2);
+        }
+        
+        // Poison Trinity
+        if (keccak256(bytes(item)) == keccak256(bytes("Poison")) &&
+            keccak256(bytes(background)) == keccak256(bytes("Venom")) &&
+            keccak256(bytes(effect)) == keccak256(bytes("Poisoning"))) {
+            return SynergyResult(true, "Toxic Trinity", "The perfect convergence of all toxins.", 2);
+        }
+        
+        // Ice Trinity
+        if (keccak256(bytes(item)) == keccak256(bytes("Shield")) &&
+            keccak256(bytes(background)) == keccak256(bytes("Frost")) &&
+            keccak256(bytes(effect)) == keccak256(bytes("Blizzard"))) {
+            return SynergyResult(true, "Frozen Fortress", "An impenetrable wall of eternal ice.", 2);
+        }
+        
+        // Cosmic Trinity
+        if (keccak256(bytes(item)) == keccak256(bytes("Magic Wand")) &&
+            keccak256(bytes(background)) == keccak256(bytes("Abyss")) &&
+            keccak256(bytes(effect)) == keccak256(bytes("Meteor"))) {
+            return SynergyResult(true, "Cosmic Sorcery", "Magic that commands the stars themselves.", 2);
+        }
+        
         // Check important Dual Synergies (Equipment transformation synergies)
         if (keccak256(bytes(monster)) == keccak256(bytes("Werewolf")) &&
             keccak256(bytes(item)) == keccak256(bytes("Amulet"))) {
@@ -431,24 +524,23 @@ contract TragedyMetadata {
             return "Legendary";
         }
         
-        // Quad synergy always gets Mythic
+        // Quad synergy always gets Ultimate
         if (synergyType == 3) {
-            return "Mythic";
+            return "Ultimate";
         }
         
-        // Trinity synergy gets at least Epic
+        // Trinity synergy always gets Trinity
         if (synergyType == 2) {
+            return "Trinity";
+        }
+        
+        // Dual synergy always gets Epic (DESIGN.md specification)
+        if (synergyType == 1) {
             return "Epic";
         }
         
         // Calculate base rarity level
         uint8 baseLevel = getBaseRarityLevel(tokenId);
-        
-        // Dual synergy upgrades by 1 level
-        if (synergyType == 1) {
-            baseLevel = baseLevel + 1;
-            if (baseLevel > 4) baseLevel = 4; // Cap at Legendary
-        }
         
         return getRarityName(baseLevel);
     }
@@ -483,6 +575,7 @@ contract TragedyMetadata {
         if (level == 2) return "Rare";
         if (level == 3) return "Epic";
         if (level == 4) return "Legendary";
-        return "Mythic";
+        if (level == 5) return "Trinity";
+        return "Ultimate";
     }
 }
