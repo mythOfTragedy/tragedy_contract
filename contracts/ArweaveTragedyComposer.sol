@@ -97,7 +97,10 @@ contract ArweaveTragedyComposer {
         // Check for synergies that transform items
         uint8 displayItem = getDisplayItem(species, item);
         
-        return composeSVGWithSynergy(species, background, displayItem, effect);
+        // Check for legendary effect transformations
+        uint8 displayEffect = getDisplayEffect(species, item, background, effect);
+        
+        return composeSVGWithSynergy(species, background, displayItem, displayEffect);
     }
     
     function composeSVGWithSynergy(
@@ -170,6 +173,21 @@ contract ArweaveTragedyComposer {
         
         // No transformation
         return item;
+    }
+    
+    function getDisplayEffect(uint8 species, uint8 item, uint8 background, uint8 effect) public pure returns (uint8) {
+        // Legendary combination 1: Skeleton + Scythe + Shadow + Mind Blast → Blackout
+        if (species == 9 && item == 6 && background == 9 && effect == 1) {
+            return 10; // Blackout effect
+        }
+        
+        // Legendary combination 2: Frankenstein + Poison + Venom + Seizure → Matrix
+        if (species == 2 && item == 3 && background == 4 && effect == 0) {
+            return 11; // Matrix effect
+        }
+        
+        // No transformation
+        return effect;
     }
     
     function svgToBase64DataUri(string memory svg) public pure returns (string memory) {
