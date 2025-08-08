@@ -8,11 +8,13 @@
 2. **モンスターとアイテム**: オンチェーンSVG（完全なオンチェーン）
 3. **カラーフィルター**: 背景テーマに応じた色相変換フィルターをSVG内で実装
 4. **Base64エンコーディング**: オンチェーンSVGをdata URIとして埋め込み
+5. **統一デプロイシステム**: 複数のデプロイ方法を一つに統合
 
 ## 前提条件
 - Node.js 16以上
 - Hardhat開発環境
-- Bon-Soleil Testnetへのアクセス
+- プライベートチェーンまたはパブリックチェーンへのアクセス
+- .envファイルに設定された秘密鍵とRPC URL
 
 ## プロジェクト構造
 ```
@@ -27,9 +29,13 @@ formal_procedure_p1/
 │   ├── ArweaveEffectBank.sol     # エフェクトArweave URL管理用
 │   └── ArweaveTragedyComposerV2.sol # SVG合成エンジン
 ├── scripts/
-│   ├── 01-deploy-all.js          # 全コントラクト一括デプロイ
-│   ├── 02-update-urls.js         # Arweave URL更新
-│   └── 03-test-composition.js    # 動作確認
+│   ├── deploy/
+│   │   ├── main.js              # 統一デプロイメントスクリプト
+│   │   ├── config.js            # デプロイ設定管理
+│   │   ├── verify.js            # 自動検証スクリプト
+│   │   └── deploy.sh            # スマートデプロイシェル
+│   ├── archive/                  # 旧デプロイスクリプト（レガシー）
+│   └── test/                     # テストスクリプト
 ├── test/
 │   └── ArweaveComposer.test.js   # ユニットテスト
 └── viewer/

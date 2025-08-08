@@ -61,15 +61,27 @@ fi
 NETWORK=""
 VERIFY=false
 SKIP_COMPILE=false
+ONLY=""
+FROM=""
 
 # Parse arguments
-for arg in "$@"; do
-    case $arg in
+while [[ $# -gt 0 ]]; do
+    case $1 in
         --verify)
             VERIFY=true
+            shift
             ;;
         --skip-compile)
             SKIP_COMPILE=true
+            shift
+            ;;
+        --only)
+            ONLY="$2"
+            shift 2
+            ;;
+        --from)
+            FROM="$2"
+            shift 2
             ;;
         --help|-h)
             print_header "Tragedy NFT Deployment Script"
@@ -86,6 +98,8 @@ for arg in "$@"; do
             echo "Options:"
             echo "  --verify     - Run verification after deployment"
             echo "  --skip-compile - Skip compilation step"
+            echo "  --only <contract> - Deploy only specific contract"
+            echo "  --from <contract> - Deploy from specific contract onwards"
             echo "  --help, -h   - Show this help message"
             echo ""
             echo "Environment:"
@@ -94,14 +108,21 @@ for arg in "$@"; do
             echo ""
             echo "Examples:"
             echo "  $0                    # Deploy to default network"
-            echo "  $0 bonsoleil          # Deploy to Bon-Soleil"
-            echo "  $0 bonsoleil --verify # Deploy and verify"
+            echo "  $0 private          # Deploy to private network"
+            echo "  $0 private --verify # Deploy and verify"
+            echo "  $0 --only bankedNFT  # Deploy only NFT contract"
+            echo "  $0 --from composer   # Deploy from composer onwards"
             exit 0
             ;;
+        -*)
+            print_error "Unknown option: $1"
+            exit 1
+            ;;
         *)
-            if [[ -z "$NETWORK" && ! "$arg" =~ ^-- ]]; then
-                NETWORK="$arg"
+            if [ -z "$NETWORK" ]; then
+                NETWORK="$1"
             fi
+            shift
             ;;
     esac
 done
@@ -135,6 +156,11 @@ print_info "Network: ${BOLD}$NETWORK${NC}"
 print_info "RPC URL: ${RPC_URL:-default}"
 print_info "Verify: $VERIFY"
 print_info "Skip Compile: $SKIP_COMPILE"
+if [ -n "$ONLY" ]; then
+    print_info "Deploy Mode: Single contract ($ONLY)"
+elif [ -n "$FROM" ]; then
+    print_info "Deploy Mode: From $FROM onwards"
+fi
 
 # Check prerequisites
 print_header "Checking Prerequisites"
@@ -173,32 +199,18 @@ fi
 print_header "Deploying Contracts"
 print_info "Running deployment script..."
 
-# Use npm run command based on network
-case "$NETWORK" in
-    hardhat|localhost)
-        npm run deploy:local
-        ;;
-    sepolia)
-        npm run deploy:testnet
-        ;;
-    private)
-        npm run deploy:private
-        ;;
-    ethereum)
-        npm run deploy:ethereum
-        ;;
-    polygon)
-        npm run deploy:polygon
-        ;;
-    base)
-        npm run deploy:base
-        ;;
-    *)
-        # For custom networks, run the script directly
-        print_info "Deploying to custom network: $NETWORK"
-        npx hardhat run scripts/deploy/main.js --network "$NETWORK"
-        ;;
-esac
+# Build deployment command
+DEPLOY_CMD="npx hardhat run scripts/deploy/main.js --network $NETWORK"
+
+# Add optional parameters
+if [ -n "$ONLY" ]; then
+    DEPLOY_CMD="$DEPLOY_CMD -- --only $ONLY"
+elif [ -n "$FROM" ]; then
+    DEPLOY_CMD="$DEPLOY_CMD -- --from $FROM"
+fi
+
+# Execute deployment
+eval $DEPLOY_CMD
 
 DEPLOY_EXIT_CODE=$?
 

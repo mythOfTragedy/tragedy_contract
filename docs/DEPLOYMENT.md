@@ -43,6 +43,10 @@ npm run deploy
 ./scripts/deploy/deploy.sh private            # Force private network
 ./scripts/deploy/deploy.sh private --verify   # Deploy and verify
 
+# Partial deployment options
+./scripts/deploy/deploy.sh --only bankedNFT   # Deploy only NFT contract
+./scripts/deploy/deploy.sh --from composer    # Deploy from composer onwards
+
 # Direct npm commands
 npm run deploy:local      # Local Hardhat network
 npm run deploy:testnet    # Public testnet (Sepolia)
@@ -62,6 +66,27 @@ The deployment script automatically:
 - Compiles contracts (unless --skip-compile)
 - Runs deployment
 - Optionally verifies (with --verify flag)
+
+#### Partial Deployment Options
+
+**--only <contract>**: Deploy only a specific contract
+- Useful for updating a single contract without redeploying everything
+- Requires that dependent contracts are already deployed
+- Example: `npm run deploy:private -- --only bankedNFT`
+
+**--from <contract>**: Deploy from a specific contract onwards
+- Useful when deployment was interrupted or when updating upper layers
+- Deploys the specified contract and all contracts that come after it
+- Example: `npm run deploy:private -- --from composer`
+
+Available contract names for partial deployment:
+- `monsterBank1`, `monsterBank2` (Individual Monster Banks)
+- `itemBank1`, `itemBank2` (Individual Item Banks)
+- `monsterBank`, `itemBank` (Main Banks)
+- `backgroundBank`, `effectBank` (Single Banks)
+- `composer` (Layer 2)
+- `legendaryBank`, `metadata` (Layer 3)
+- `bankedNFT` (Layer 4)
 
 Legacy method (still available):
 ```bash

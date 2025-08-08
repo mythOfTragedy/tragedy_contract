@@ -35,6 +35,24 @@ async function deployContract(contractName, ...args) {
 
 async function main() {
     try {
+        // Parse command line arguments
+        const args = process.argv.slice(2);
+        const options = {
+            only: null,
+            from: null
+        };
+        
+        // Parse options
+        for (let i = 0; i < args.length; i++) {
+            if (args[i] === '--only' && args[i + 1]) {
+                options.only = args[i + 1];
+                i++;
+            } else if (args[i] === '--from' && args[i + 1]) {
+                options.from = args[i + 1];
+                i++;
+            }
+        }
+        
         // Validate configuration
         config.validate();
         
@@ -51,98 +69,136 @@ async function main() {
         log(`Deployer: ${deployer.address}`);
         log(`Balance: ${hre.ethers.utils.formatEther(await deployer.getBalance())} ETH`);
         
-        const deployment = {
+        // Display deployment options
+        if (options.only) {
+            log(`Deployment mode: Single contract (${options.only})`, 'warning');
+        } else if (options.from) {
+            log(`Deployment mode: From ${options.from} onwards`, 'warning');
+        } else {
+            log(`Deployment mode: Full deployment`, 'info');
+        }
+        
+        // Load existing deployment if partial deployment
+        let deployment = {
             network,
             timestamp: new Date().toISOString(),
             contracts: {}
         };
         
+        if (options.only || options.from) {
+            try {
+                const currentPath = config.getOutputPaths(network).current;
+                if (fs.existsSync(currentPath)) {
+                    const existing = JSON.parse(fs.readFileSync(currentPath, 'utf8'));
+                    deployment.contracts = existing.contracts || {};
+                    log("Loaded existing deployment data", 'success');
+                }
+            } catch (e) {
+                log("No existing deployment found, starting fresh", 'warning');
+            }
+        }
+        
         console.log("\n" + "-".repeat(60));
         console.log(`${colors.bright}Starting Deployment${colors.reset}`);
         console.log("-".repeat(60) + "\n");
         
-        // Layer 1: Individual Banks
-        log("Layer 1: Deploying Individual Banks", 'info');
+        // Contract deployment sequence
+        const deploymentSteps = [
+            // Layer 1: Individual Banks
+            { name: 'monsterBank1', contract: 'ArweaveMonsterBank1', layer: 1, args: [] },
+            { name: 'monsterBank2', contract: 'ArweaveMonsterBank2', layer: 1, args: [] },
+            { name: 'itemBank1', contract: 'ArweaveItemBank1', layer: 1, args: [] },
+            { name: 'itemBank2', contract: 'ArweaveItemBank2', layer: 1, args: [] },
+            // Layer 1: Main Banks
+            { name: 'monsterBank', contract: 'ArweaveMonsterBank', layer: 1, args: ['monsterBank1', 'monsterBank2'] },
+            { name: 'itemBank', contract: 'ArweaveItemBank', layer: 1, args: ['itemBank1', 'itemBank2'] },
+            { name: 'backgroundBank', contract: 'ArweaveBackgroundBank', layer: 1, args: [] },
+            { name: 'effectBank', contract: 'ArweaveEffectBank', layer: 1, args: [] },
+            // Layer 2: Composer
+            { name: 'composer', contract: 'ArweaveTragedyComposer', layer: 2, args: ['monsterBank', 'backgroundBank', 'itemBank', 'effectBank'] },
+            // Layer 3: Legendary Bank and Metadata
+            { name: 'legendaryBank', contract: 'LegendaryBank', layer: 3, args: [] },
+            { name: 'metadata', contract: 'TragedyMetadata', layer: 3, args: ['composer', 'legendaryBank'] },
+            // Layer 4: NFT Contract
+            { name: 'bankedNFT', contract: 'BankedNFT', layer: 4, args: 'nft' }
+        ];
         
-        // Monster Banks
-        const monsterBank1 = await deployContract("ArweaveMonsterBank1");
-        const monsterBank2 = await deployContract("ArweaveMonsterBank2");
-        deployment.contracts.monsterBank1 = monsterBank1.address;
-        deployment.contracts.monsterBank2 = monsterBank2.address;
+        // Determine starting point
+        let startIndex = 0;
+        if (options.from) {
+            startIndex = deploymentSteps.findIndex(step => step.name === options.from);
+            if (startIndex === -1) {
+                throw new Error(`Unknown contract: ${options.from}`);
+            }
+        }
         
-        // Item Banks
-        const itemBank1 = await deployContract("ArweaveItemBank1");
-        const itemBank2 = await deployContract("ArweaveItemBank2");
-        deployment.contracts.itemBank1 = itemBank1.address;
-        deployment.contracts.itemBank2 = itemBank2.address;
+        // Deploy contracts
+        const deployedContracts = {};
+        let currentLayer = 0;
         
-        // Layer 1: Main Banks
-        log("\nLayer 1: Deploying Main Banks", 'info');
+        for (let i = startIndex; i < deploymentSteps.length; i++) {
+            const step = deploymentSteps[i];
+            
+            // Check if we should deploy this contract
+            if (options.only && step.name !== options.only) {
+                // Skip if deploying only a specific contract
+                if (deployment.contracts[step.name]) {
+                    deployedContracts[step.name] = await hre.ethers.getContractAt(
+                        step.contract,
+                        deployment.contracts[step.name]
+                    );
+                }
+                continue;
+            }
+            
+            // Show layer info
+            if (step.layer !== currentLayer) {
+                currentLayer = step.layer;
+                log(`\nLayer ${currentLayer}: ${getLayerDescription(currentLayer)}`, 'info');
+            }
+            
+            // Prepare arguments
+            let args = [];
+            if (step.args === 'nft') {
+                const nftConfig = config.getNFTConfig();
+                args = [
+                    nftConfig.name,
+                    nftConfig.symbol,
+                    nftConfig.maxSupply,
+                    hre.ethers.utils.parseEther(nftConfig.mintFee),
+                    nftConfig.royaltyRate
+                ];
+            } else {
+                args = step.args.map(argName => {
+                    const address = deployment.contracts[argName] || deployedContracts[argName]?.address;
+                    if (!address) {
+                        throw new Error(`Required contract ${argName} not found`);
+                    }
+                    return address;
+                });
+            }
+            
+            // Deploy contract
+            const contract = await deployContract(step.contract, ...args);
+            deployedContracts[step.name] = contract;
+            deployment.contracts[step.name] = contract.address;
+            
+            // Stop if only deploying one contract
+            if (options.only) {
+                break;
+            }
+        }
         
-        const monsterBank = await deployContract(
-            "ArweaveMonsterBank",
-            monsterBank1.address,
-            monsterBank2.address
-        );
-        deployment.contracts.monsterBank = monsterBank.address;
-        
-        const itemBank = await deployContract(
-            "ArweaveItemBank", 
-            itemBank1.address,
-            itemBank2.address
-        );
-        deployment.contracts.itemBank = itemBank.address;
-        
-        const backgroundBank = await deployContract("ArweaveBackgroundBank");
-        deployment.contracts.backgroundBank = backgroundBank.address;
-        
-        const effectBank = await deployContract("ArweaveEffectBank");
-        deployment.contracts.effectBank = effectBank.address;
-        
-        // Layer 2: Composer
-        log("\nLayer 2: Deploying Composer", 'info');
-        
-        const composer = await deployContract(
-            "ArweaveTragedyComposer",
-            monsterBank.address,
-            backgroundBank.address,
-            itemBank.address,
-            effectBank.address
-        );
-        deployment.contracts.composer = composer.address;
-        
-        // Layer 3: Legendary Bank and Metadata
-        log("\nLayer 3: Deploying Legendary Bank and Metadata", 'info');
-        
-        const legendaryBank = await deployContract("LegendaryBank");
-        deployment.contracts.legendaryBank = legendaryBank.address;
-        
-        const metadata = await deployContract(
-            "TragedyMetadata",
-            composer.address,
-            legendaryBank.address
-        );
-        deployment.contracts.metadata = metadata.address;
-        
-        // Layer 4: NFT Contract
-        log("\nLayer 4: Deploying NFT Contract", 'info');
-        
-        const nftConfig = config.getNFTConfig();
-        const bankedNFT = await deployContract(
-            "BankedNFT",
-            nftConfig.name,
-            nftConfig.symbol,
-            nftConfig.maxSupply,
-            hre.ethers.utils.parseEther(nftConfig.mintFee),
-            nftConfig.royaltyRate
-        );
-        deployment.contracts.bankedNFT = bankedNFT.address;
-        
-        // Set metadata bank
-        log("\nSetting metadata bank on NFT contract...", 'info');
-        const tx = await bankedNFT.setMetadataBank(metadata.address);
-        await tx.wait();
-        log("Metadata bank set successfully", 'success');
+        // Set metadata bank if NFT was deployed
+        if ((options.only === 'bankedNFT' || (!options.only && startIndex <= deploymentSteps.findIndex(s => s.name === 'bankedNFT'))) 
+            && deployment.contracts.bankedNFT && deployment.contracts.metadata) {
+            log("\nSetting metadata bank on NFT contract...", 'info');
+            const bankedNFT = deployedContracts.bankedNFT || 
+                await hre.ethers.getContractAt("BankedNFT", deployment.contracts.bankedNFT);
+            const tx = await bankedNFT.setMetadataBank(deployment.contracts.metadata);
+            await tx.wait();
+            log("Metadata bank set successfully", 'success');
+        }
         
         // Save deployment
         const outputPaths = config.getOutputPaths(network);
@@ -210,6 +266,16 @@ async function main() {
         console.error(error);
         process.exit(1);
     }
+}
+
+function getLayerDescription(layer) {
+    const descriptions = {
+        1: "Deploying Bank Contracts",
+        2: "Deploying Composer",
+        3: "Deploying Legendary Bank and Metadata",
+        4: "Deploying NFT Contract"
+    };
+    return descriptions[layer] || "Deploying Contracts";
 }
 
 // Execute deployment
