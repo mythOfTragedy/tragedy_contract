@@ -76,9 +76,11 @@ for arg in "$@"; do
             echo "Usage: $0 [network] [options]"
             echo ""
             echo "Networks:"
-            echo "  bonsoleil    - Bon-Soleil testnet"
-            echo "  bonsoleil_testnet - Bon-Soleil testnet (alias)"
-            echo "  mainnet      - Ethereum mainnet"
+            echo "  sepolia      - Ethereum Sepolia testnet"
+            echo "  private      - Private chain (configured via .env)"
+            echo "  ethereum     - Ethereum mainnet"
+            echo "  polygon      - Polygon mainnet"
+            echo "  base         - Base mainnet"
             echo "  hardhat      - Local Hardhat network"
             echo ""
             echo "Options:"
@@ -107,22 +109,26 @@ done
 # If no network specified, try to detect from .env or use default
 if [ -z "$NETWORK" ]; then
     if [ ! -z "$RPC_URL" ]; then
-        if [[ "$RPC_URL" == *"bon-soleil"* ]]; then
-            NETWORK="bonsoleil"
-            print_info "Detected Bon-Soleil network from RPC_URL"
+        if [[ "$RPC_URL" == *"sepolia"* ]]; then
+            NETWORK="sepolia"
+            print_info "Detected Sepolia testnet from RPC_URL"
+        elif [[ "$RPC_URL" == *"polygon"* ]]; then
+            NETWORK="polygon"
+            print_info "Detected Polygon network from RPC_URL"
+        elif [[ "$RPC_URL" == *"base"* ]]; then
+            NETWORK="base"
+            print_info "Detected Base network from RPC_URL"
+        else
+            NETWORK="private"
+            print_info "Using private network configuration from .env"
         fi
     else
-        NETWORK="bonsoleil"
-        print_info "Using default network: bonsoleil"
+        NETWORK="private"
+        print_info "Using default network: private"
     fi
 fi
 
-# Handle network aliases
-case "$NETWORK" in
-    bonsoleil_testnet)
-        NETWORK="bonsoleil"
-        ;;
-esac
+# No network aliases needed anymore
 
 print_header "Tragedy NFT Deployment"
 print_info "Network: ${BOLD}$NETWORK${NC}"
@@ -172,11 +178,20 @@ case "$NETWORK" in
     hardhat|localhost)
         npm run deploy:local
         ;;
-    bonsoleil)
+    sepolia)
         npm run deploy:testnet
         ;;
-    mainnet)
-        npm run deploy:production
+    private)
+        npm run deploy:private
+        ;;
+    ethereum)
+        npm run deploy:ethereum
+        ;;
+    polygon)
+        npm run deploy:polygon
+        ;;
+    base)
+        npm run deploy:base
         ;;
     *)
         # For custom networks, run the script directly
@@ -198,8 +213,11 @@ if [ $DEPLOY_EXIT_CODE -eq 0 ]; then
             hardhat|localhost)
                 print_warning "Skipping verification for local network"
                 ;;
-            bonsoleil)
+            sepolia)
                 npm run verify:testnet
+                ;;
+            private)
+                npm run verify:private
                 ;;
             *)
                 npx hardhat run scripts/deploy/verify.js --network "$NETWORK"

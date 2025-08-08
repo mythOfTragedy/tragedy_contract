@@ -10,11 +10,11 @@
 
 | 旧コマンド/スクリプト | 新コマンド | 説明 |
 |---------------------|-----------|------|
-| `npx hardhat run scripts/deploy-clean.js --network bonsoleil` | `npm run deploy:testnet` | クリーンデプロイ |
-| `npx hardhat run scripts/deploy-production.js --network bonsoleil` | `npm run deploy:testnet` | 本番デプロイ |
-| `npx hardhat run scripts/01-deploy-all.js --network bonsoleil` | `npm run deploy:testnet` | ワークフローデプロイ |
-| `./deploy.sh bonsoleil --with-nft` | `npm run deploy:testnet` | シェルスクリプトデプロイ |
-| 手動検証 | `npm run verify:testnet` | 自動検証 |
+| `npx hardhat run scripts/deploy-clean.js --network bonsoleil` | `npm run deploy:private` | クリーンデプロイ |
+| `npx hardhat run scripts/deploy-production.js --network bonsoleil` | `npm run deploy:private` | 本番デプロイ |
+| `npx hardhat run scripts/01-deploy-all.js --network bonsoleil` | `npm run deploy:private` | ワークフローデプロイ |
+| `./deploy.sh bonsoleil --with-nft` | `npm run deploy:private` | シェルスクリプトデプロイ |
+| 手動検証 | `npm run verify:private` | 自動検証 |
 
 ### レガシーコマンド（一時的に利用可能）
 
@@ -87,11 +87,11 @@ ls -la deployments/
 # コンパイル
 npx hardhat compile
 
-# テストネットにデプロイ
-npm run deploy:testnet
+# プライベートチェーンにデプロイ
+npm run deploy:private
 
 # 検証を実行
-npm run verify:testnet
+npm run verify:private
 ```
 
 ### ステップ3: 結果を確認

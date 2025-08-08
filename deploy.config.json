@@ -4,15 +4,30 @@
       "description": "Local development network",
       "confirmations": 1
     },
-    "bonsoleil": {
-      "description": "Bon-Soleil testnet",
+    "sepolia": {
+      "description": "Ethereum Sepolia testnet",
       "confirmations": 2,
-      "explorerUrl": "https://explorer.bonsoleil.io"
+      "explorerUrl": "https://sepolia.etherscan.io"
     },
-    "mainnet": {
+    "private": {
+      "description": "Private chain (configured via .env)",
+      "confirmations": 2,
+      "explorerUrl": "Configure in .env"
+    },
+    "ethereum": {
       "description": "Ethereum mainnet",
       "confirmations": 5,
       "explorerUrl": "https://etherscan.io"
+    },
+    "polygon": {
+      "description": "Polygon mainnet",
+      "confirmations": 5,
+      "explorerUrl": "https://polygonscan.com"
+    },
+    "base": {
+      "description": "Base mainnet",
+      "confirmations": 5,
+      "explorerUrl": "https://basescan.org"
     }
   },
   "contracts": {

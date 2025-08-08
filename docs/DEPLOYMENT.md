@@ -39,18 +39,21 @@ npx hardhat compile
 npm run deploy
 
 # Or deploy with specific options
-./scripts/deploy/deploy.sh                    # Uses .env RPC_URL
-./scripts/deploy/deploy.sh bonsoleil          # Force specific network
-./scripts/deploy/deploy.sh bonsoleil --verify # Deploy and verify
+./scripts/deploy/deploy.sh                    # Uses .env configuration
+./scripts/deploy/deploy.sh private            # Force private network
+./scripts/deploy/deploy.sh private --verify   # Deploy and verify
 
 # Direct npm commands
 npm run deploy:local      # Local Hardhat network
-npm run deploy:testnet    # Bon-Soleil testnet
-npm run deploy:bonsoleil  # Bon-Soleil testnet (alias)
-npm run deploy:production # Mainnet
+npm run deploy:testnet    # Public testnet (Sepolia)
+npm run deploy:private    # Private chain (configured via .env)
+npm run deploy:ethereum   # Ethereum mainnet
+npm run deploy:polygon    # Polygon mainnet
+npm run deploy:base       # Base mainnet
 
 # Verify deployment
-npm run verify:testnet
+npm run verify:private    # Verify private chain deployment
+npm run verify:testnet    # Verify testnet deployment
 ```
 
 The deployment script automatically:
@@ -199,10 +202,17 @@ npx hardhat verify --network bonsoleil <CONTRACT_ADDRESS> <CONSTRUCTOR_ARGS>
 
 ## Network Configuration
 
-### Bon-Soleil Testnet
-- RPC: https://rpc.rinkeby.bonsoleil.io (example)
-- Chain ID: Check in `hardhat.config.js`
-- Explorer: https://explorer.bonsoleil.io
+### Network Types
+
+#### Public Testnet (Sepolia)
+- RPC: https://rpc.sepolia.org
+- Chain ID: 11155111
+- Explorer: https://sepolia.etherscan.io
+
+#### Private Chain
+- RPC: Configure in .env as RPC_URL
+- Chain ID: Configure in .env as CHAIN_ID
+- Explorer: Depends on your private chain
 
 ### Mainnet Deployment
 Replace `bonsoleil` with your mainnet configuration:

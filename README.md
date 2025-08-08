@@ -106,9 +106,10 @@ PRIVATE_KEY=your_private_key_here
 # .env.exampleをコピーして.envを作成
 cp .env.example .env
 
-# .envを編集して秘密鍵とRPC URLを設定
+# .envを編集して秘密鍵とネットワーク設定
 # PRIVATE_KEY=your_private_key_here
-# RPC_URL=https://dev2.bon-soleil.com/rpc
+# RPC_URL=https://your-private-chain.com/rpc
+# CHAIN_ID=31337
 ```
 
 ### 3.2 クイックデプロイ
@@ -117,8 +118,10 @@ cp .env.example .env
 npm run deploy
 
 # または特定のネットワークを指定
-npm run deploy:testnet    # Bon-Soleilテストネット
-npm run deploy:production # メインネット
+npm run deploy:testnet  # Sepoliaテストネット
+npm run deploy:private  # プライベートチェーン（.env設定）
+npm run deploy:ethereum # Ethereumメインネット
+npm run deploy:polygon  # Polygonメインネット
 
 # デプロイと検証を同時に実行
 ./scripts/deploy/deploy.sh --verify

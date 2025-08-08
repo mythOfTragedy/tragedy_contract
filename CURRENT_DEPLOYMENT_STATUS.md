@@ -3,8 +3,8 @@
 ## 最新デプロイメント情報 / Latest Deployment
 
 **Date**: 2025-08-07 22:50:50 UTC  
-**Network**: Bon-Soleil Testnet  
-**Method**: `npm run deploy:testnet` (新統一システム)
+**Network**: Private Chain (RPC_URL/CHAIN_ID from .env)  
+**Method**: `npm run deploy:private` (新統一システム)
 
 ## デプロイ済みコントラクト / Deployed Contracts
 
@@ -67,7 +67,8 @@ npx hardhat run scripts/deploy-clean.js --network bonsoleil
 
 ## 注意事項 / Notes
 
-- **新システム**: `npm run deploy:testnet`が推奨デプロイ方法
+- **新システム**: `npm run deploy:private`がプライベートチェーンへの推奨デプロイ方法
+- **.env設定**: RPC_URL、CHAIN_ID、PRIVATE_KEYを設定することで任意のプライベートチェーンに対応
 - **旧システム**: `legacy:`プレフィックス付きコマンドで利用可能
 - 複数のデプロイ履歴ファイルが存在する場合、`deployments/current.json`が最新
 - フロントエンド（viewer）は自動的に`viewer/deployment.json`を参照
