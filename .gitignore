@@ -56,13 +56,27 @@ Thumbs.db
 # package-lock.json
 # yarn.lock
 
-# Deployment files (keep deployment.json but ignore timestamped versions)
+# Deployment files (keep current.json and viewer deployment)
 deployments/*.json
+!deployments/current.json
 !deployments/.gitkeep
+
+# Archive directory
+archive/
+
+# CSV mapping files
+FINAL-token-mapping-*.csv
+
+# Root level deployment files
+deployment-*.json
+
+# Sample files
+sample-*.svg
 
 # Temporary files
 *.tmp
 *.temp
+*.bak
 .tmp/
 .temp/
 
